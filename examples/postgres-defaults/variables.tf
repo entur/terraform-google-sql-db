@@ -1,5 +1,6 @@
 
 variable "gcp_project" {
+  type = string
   description = "The GCP project id"
 }
 
@@ -38,11 +39,21 @@ variable "prevent_destroy" {
 variable "db_name" {
   description = "Name of the database"
   type        = string
-  default     = "example"
+  default     = "example-db-name"
 }
 
 variable "db_user" {
   description = "Name of the database user"
   type        = string
-  default     = "example-user"
+  default     = "example-db-user"
+}
+
+variable "service_account_email" {
+  description= "Email to the service account that we want the bucket to be attached to"
+  default = ""
+}
+
+variable "database_version" {
+  description = "Which POSTGRES version to use. Check availability before declaring any version."
+  default     = "POSTGRES_9_6"
 }
