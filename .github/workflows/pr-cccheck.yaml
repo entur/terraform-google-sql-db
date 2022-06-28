@@ -1,0 +1,26 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - edited
+      - synchronize
+
+env:
+  TF_VERSION: 1.1.7
+
+jobs:
+  pr-title-check:
+    name: conventional commit pr title
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - uses: amannn/action-semantic-pull-request@91682d013dea3ff257520b9b68c9cb93ced4fe9b
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

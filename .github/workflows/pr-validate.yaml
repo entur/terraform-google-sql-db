@@ -1,0 +1,59 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+
+env:
+  TF_VERSION: 1.1.7
+
+jobs:
+  tf-validate:
+    name: terraform validation
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { dir: ["./modules/terraform-gcp-postgres"] }
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@ed3a0531877aca392eb870f440d9ae7aba83a6bd # v1.4.0
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform validation
+        working-directory: ${{ matrix.dir }}
+        run: |
+          terraform init -reconfigure
+          terraform fmt -recursive -check
+          terraform validate
+
+  tf-docs:
+    name: terraform docs
+    runs-on: ubuntu-latest
+    needs: tf-validate
+    strategy:
+      matrix: { dir: ["./modules/terraform-gcp-postgres"] }
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Render terraform docs inside the README.md and push changes back to PR branch
+        uses: terraform-docs/gh-actions@f6d59f89a280fa0a3febf55ef68f146784b20ba0 # v1.0.0
+        with:
+          working-dir: ${{ matrix.dir }}
+          output-file: README.md
+          output-method: inject
+          git-push: "true"
