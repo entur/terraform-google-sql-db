@@ -1,6 +1,6 @@
-# Terraform module(s) for creating postgresql databases following Entur's best practices
+# Terraform module(s) for creating Google Cloud SQL instances following Entur's conventions
 
-Modules that helps deploying postgresql databases on Cloud SQL in GCP 2.0. The modules uses the init module to get defaults like application name and project.
+Modules for provisioning Cloud SQL instances on Google Cloud Platform.
 
 ## PostgreSQL module
 
