@@ -2,10 +2,33 @@
 
 Modules that helps deploying postgresql databases on Cloud SQL in GCP 2.0. The modules uses the init module to get defaults like application name and project.
 
-## Main postgresql module
+## PostgreSQL module
 
-A postgresql module that uses the [init module](https://github.com/entur/terraform-google-init) as minimum input, while allowing overrides and additional configuration.
+A PostgreSQL module that uses the [init module](https://github.com/entur/terraform-google-init) as minimum input, while allowing overrides and additional configuration.
 
 [Module](modules/postgresql)
 
 [Examples](examples)
+
+## Usage instructions
+
+### Version constraints
+You can control the version of a module dependency by adding `?ref=TAG` at the end of the source argument. This is highly recommended. You can find a list of available versions [here](releases).
+
+```
+module "postgresql" {
+  source = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=vVERSION"
+  ...
+}
+```
+
+Dependency automation tools such as Renovate Bot will be able to discover new releases and suggest updates automatically.
+
+#### Example
+
+```
+module "postgresql" {
+  source = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.0.0"
+  ...
+}
+```
