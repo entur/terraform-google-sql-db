@@ -1,16 +1,15 @@
 variable "init" {
   default = {
     app = {
-      id         = "posgrsmdul"
-      name       = "tf-mod-gcp-postgres"
+      id         = "tfmodules"
+      name       = "tf-mod-google-postgresql"
       owner      = "team-plattform"
-      project_id = "ent-posgrsmdul-dev"
+      project_id = "ent-tfmodules-dev"
     }
-    #app_name = "terraform-gcp-postgres" # After rename of the module, this name will be used.
     environment = "dev"
     labels = {
-      app    = "terraform-gcp-postgres"
-      app_id = "posgrsmdul"
+      app    = "tf-mod-google-postgresql"
+      app_id = "tfmodules"
       env    = "dev"
       team   = "team-plattform"
       owner  = "team-plattform"

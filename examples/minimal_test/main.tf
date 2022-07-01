@@ -1,3 +1,10 @@
+resource "random_integer" "random_database_generation" {
+  # This resource block is used to randomize instance names for testing; 
+  # do not include this in a live configuration.
+  min = 1
+  max = 999
+}
+
 module "init" {
   # This is an example only; if you're adding this block to a live configuration,
   # make sure to use the latest release of the init module, found here:
@@ -14,4 +21,6 @@ module "postgresql" {
   # source     = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=vVERSION"
   source     = "../../modules/postgresql"
   init       = module.init
+  #init       = var.init
+  generation = random_integer.random_database_generation.result
 }
