@@ -1,5 +1,5 @@
 variable "init" {
-  description = "Entur init module output. https://github.com/entur/terraform-gcp-init. Used to determine application name, application project, labels, and resource names."
+  description = "Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names."
   type = object({
     app = object({
       id         = string

@@ -6,7 +6,6 @@ variable "init" {
       owner      = "team-plattform"
       project_id = "ent-posgrsmdul-dev"
     }
-    #app_name = "terraform-gcp-postgres" # After rename of the module, this name will be used.
     environment = "dev"
     labels = {
       app    = "terraform-gcp-postgres"

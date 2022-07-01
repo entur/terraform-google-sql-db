@@ -3,8 +3,8 @@ resource "random_integer" "random_database_generation" {
   max = 999
 }
 
-module "terraform-gcp-postgres" {
-  source     = "../../modules/terraform-gcp-postgres"
+module "postgresql" {
+  source     = "../../modules/postgresql"
   init       = var.init
   generation = random_integer.random_database_generation.result
 }
