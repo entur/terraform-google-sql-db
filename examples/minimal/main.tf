@@ -8,7 +8,7 @@ module "init" {
   # make sure to use the latest release of the init module, found here:
   # https://github.com/entur/terraform-google-init
   source      = "github.com/entur/terraform-google-init//modules/init?ref=v0.1.0"
-  app_id      = "posgrsmdul"
+  app_id      = "tfmodules"
   environment = "dev"
 }
 
