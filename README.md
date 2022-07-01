@@ -13,7 +13,7 @@ A PostgreSQL module that uses the [init module](https://github.com/entur/terrafo
 ## Usage instructions
 
 ### Version constraints
-You can control the version of a module dependency by adding `?ref=TAG` at the end of the source argument. This is highly recommended. You can find a list of available versions [here](releases).
+You can control the version of a module dependency by adding `?ref=TAG` at the end of the source argument. This is highly recommended. You can find a list of available versions [here](https://github.com/entur/terraform-google-sql-db/releases).
 
 ```
 module "postgresql" {
