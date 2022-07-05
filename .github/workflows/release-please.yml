@@ -9,6 +9,7 @@ jobs:
   tf-tests:
     uses: entur/gh-workflows/.github/workflows/release-please.yml@main
     with:
+      release_type: terraform-module
       version_bumped_files: |
         README.md
         examples/minimal/main.tf
