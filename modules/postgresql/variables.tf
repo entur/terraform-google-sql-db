@@ -46,6 +46,12 @@ variable "generation" {
   }
 }
 
+variable "database_name" {
+  description = "The name of the database. Defaults to init.app.name."
+  type        = string
+  default     = null
+}
+
 variable "database_version" {
   description = "The postgres database version."
   type        = string
