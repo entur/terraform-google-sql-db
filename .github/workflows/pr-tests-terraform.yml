@@ -1,0 +1,16 @@
+name: Call Terraform Tests, Docs & Compliance
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  tf-tests:
+    uses: entur/gh-workflows/.github/workflows/pr-tests-terraform.yml@main
+    with:
+      module_dirs: '["./modules/init"]'
