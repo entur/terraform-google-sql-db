@@ -7,11 +7,9 @@ module "init" {
   environment = "dev"
 }
 
+# ci: x-release-please-start-version
 module "postgresql" {
-  # This is for local reference only; if you're using this module as a published
-  # module from GitHub, the 'source' parameter must refer to it's public location.
-  # See README.md for instructions.
-  # source     = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=vVERSION"
-  source     = "../../modules/postgresql"
+  source     = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v0.0.1"
   init       = module.init
 }
+# ci: x-release-please-end
