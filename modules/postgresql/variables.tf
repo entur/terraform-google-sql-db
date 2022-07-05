@@ -57,6 +57,12 @@ variable "database_version" {
   }
 }
 
+variable "database_user" {
+  description = "The username of the database. Defaults to init.app.name."
+  type        = string
+  default     = null
+}
+
 variable "retained_backups" {
   description = "The number of backups to retain. 30 for prod, 7 for non prod."
   type        = number
