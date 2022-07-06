@@ -40,7 +40,6 @@ No modules.
 | <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br>    app = object({<br>      id         = string<br>      name       = string<br>      owner      = string<br>      project_id = string<br>    })<br>    environment   = string<br>    labels        = map(string)<br>    is_production = bool<br>  })</pre> | n/a | yes |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | REGIONAL or ZONAL database. | `string` | `"REGIONAL"` | no |
 | <a name="input_backup_start_time"></a> [backup\_start\_time](#input\_backup\_start\_time) | Start time in UTC for daily backup job in the format HH:MM. This is the start time of a 4 hour time window. | `string` | `"00:00"` | no |
-| <a name="input_database_user"></a> [database\_user](#input\_database\_user) | The username of the database. Defaults to init.app.name. | `string` | `null` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | The postgres database version. | `string` | `"POSTGRES_13"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Enable backup for database. | `bool` | `null` | no |
 | <a name="input_disable_offsite_backup"></a> [disable\_offsite\_backup](#input\_disable\_offsite\_backup) | Disable offsite backup for this database. Offsite backup is only applied to prd. | `bool` | `false` | no |
@@ -54,6 +53,7 @@ No modules.
 | <a name="input_region"></a> [region](#input\_region) | The region of this database | `string` | `"europe-west1"` | no |
 | <a name="input_retained_backups"></a> [retained\_backups](#input\_retained\_backups) | The number of backups to retain. 30 for prod, 7 for non prod. | `number` | `null` | no |
 | <a name="input_transaction_log_retention_days"></a> [transaction\_log\_retention\_days](#input\_transaction\_log\_retention\_days) | How long the transaction logs is stored (1-7). | `number` | `7` | no |
+| <a name="input_user_name"></a> [user\_name](#input\_user\_name) | The username of the database. Defaults to init.app.name. | `string` | `null` | no |
 
 ## Outputs
 
