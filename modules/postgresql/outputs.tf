@@ -1,15 +1,15 @@
 output "init" {
+  description = "The output of the consumed init module."
   value       = var.init
-  description = "The init module used in the module."
 }
 
 output "user" {
+  description = "Map containing the username and password of the default application user."
+  sensitive   = true
   value = {
     username = google_sql_user.main.name
     password = random_password.password.result
   }
-  description = "Map containing the username and password of the default application user."
-  sensitive   = true
 }
 
 output "instance" {
@@ -23,6 +23,6 @@ output "databases" {
 }
 
 output "kubernetes_namespace" {
-  description = "Name of the kubernetes namespace where the connection details configmap and secret are deployed."
+  description = "Name of the Kubernetes namespace where config maps and secrets are deployed."
   value       = kubernetes_secret.main_database_credentials.metadata[0].namespace
 }

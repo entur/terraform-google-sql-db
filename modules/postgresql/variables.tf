@@ -14,7 +14,7 @@ variable "init" {
 }
 
 variable "region" {
-  description = "The region of this database"
+  description = "The region the instance will sit in."
   type        = string
   default     = "europe-west1"
 }
@@ -36,7 +36,7 @@ variable "machine_size" {
 }
 
 variable "generation" {
-  description = "Generation of database. Starts at 1, ends at 999. Will be padded with leading zeros."
+  description = "The generation (aka serial no.) of the instance. Starts at 1, ends at 999. Will be padded with leading zeros."
   type        = number
   default     = 1
 
@@ -47,53 +47,53 @@ variable "generation" {
 }
 
 variable "databases" {
-  description = "The databases to create."
+  description = "Names of databases to create."
   type        = list(string)
 }
 
 variable "database_version" {
-  description = "The postgres database version."
+  description = "The PostgreSQL version (see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version)."
   type        = string
   default     = "POSTGRES_13"
 
   validation {
     condition     = can(regex("^POSTGRES_[1-9][0-9]$", var.database_version))
-    error_message = "Supports postgres version 10 or higher."
+    error_message = "Supports PostgreSQL version 10 or higher."
   }
 }
 
 variable "user_name" {
-  description = "The username of the database. Defaults to init.app.name."
+  description = "The username of the default application user. Defaults to the app ID."
   type        = string
   default     = null
 }
 
 variable "retained_backups" {
-  description = "The number of backups to retain. 30 for prod, 7 for non prod."
+  description = "The number of backups to retain. Default is 30 for production, 7 for non-production."
   type        = number
   default     = null
 }
 
 variable "disk_size" {
-  description = "The disk size of this database. Default is 10 (GB). Only takes effect if disk_autoresize is false."
+  description = "The storage disk size of the instance. Default is 10 (GB). Only takes effect if disk_autoresize is set to 'false'."
   type        = number
   default     = 10
 }
 
 variable "disk_autoresize" {
-  description = "Enable disk auto resize."
+  description = "Whether to enable auto-resizing of the storage disk."
   type        = bool
   default     = true
 }
 
 variable "disk_autoresize_limit" {
-  description = "Maximum size of auto resized disk. Default 500 for production, and 50 for non-prod."
+  description = "The maximum size an auto-resized disk can reach. Default is 500 for production, 50 for non-production."
   type        = number
   default     = null
 }
 
 variable "enable_backup" {
-  description = "Enable daily backup of the database."
+  description = "Whether to enable daily backup of databases."
   type        = bool
   default     = true
 }
@@ -125,25 +125,25 @@ variable "maintenance_window" {
 }
 
 variable "deletion_protection" {
-  description = "Enable backup for database."
+  description = "Whether or not to allow Terraform to destroy the instance."
   type        = bool
   default     = null
 }
 
 variable "transaction_log_retention_days" {
-  description = "How long the transaction logs is stored (1-7)."
+  description = "How long transaction logs are stored (1-7)."
   type        = number
   default     = 7
 }
 
 variable "availability_type" {
-  description = "REGIONAL or ZONAL database."
+  description = "Whether to enable high availability with automatic failover over multiple zones ('REGIONAL') vs. single zone ('ZONAL')."
   type        = string
   default     = "REGIONAL"
 }
 
 variable "disable_offsite_backup" {
-  description = "Disable offsite backup for this database. Offsite backup is only applied to prd."
+  description = "Disable offsite backup for this instance. Offsite backup is only applied to production environments."
   type        = bool
   default     = false
 }
