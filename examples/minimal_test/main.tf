@@ -23,4 +23,6 @@ module "postgresql" {
   init       = module.init
   #init       = var.init
   generation = random_integer.random_database_generation.result
+  databases = [ "my-database", "another-database"] 
 }
+

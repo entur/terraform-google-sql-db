@@ -1,5 +1,4 @@
 locals {
-  database_name         = var.database_name != null ? var.database_name : var.init.app.name
   retained_backups      = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
   deletion_protection   = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
   offsite_backup_label  = var.disable_offsite_backup == true && var.init.is_production ? { label_backup_offsite = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
@@ -45,7 +44,8 @@ resource "google_sql_database_instance" "main" {
 }
 
 resource "google_sql_database" "main" {
-  name     = local.database_name
+  for_each = toset(var.databases)
+  name     = each.key
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
 }

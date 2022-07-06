@@ -11,5 +11,6 @@ module "init" {
 module "postgresql" {
   source     = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v0.0.1"
   init       = module.init
+  databases  = ["my-database"]
 }
 # ci: x-release-please-end

@@ -46,10 +46,9 @@ variable "generation" {
   }
 }
 
-variable "database_name" {
-  description = "The name of the database. Defaults to init.app.name."
-  type        = string
-  default     = null
+variable "databases" {
+  description = "The databases to create."
+  type        = list(string)
 }
 
 variable "database_version" {
