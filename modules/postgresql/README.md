@@ -37,6 +37,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_databases"></a> [databases](#input\_databases) | The databases to create. | `list(string)` | n/a | yes |
 | <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br>    app = object({<br>      id         = string<br>      name       = string<br>      owner      = string<br>      project_id = string<br>    })<br>    environment   = string<br>    labels        = map(string)<br>    is_production = bool<br>  })</pre> | n/a | yes |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | REGIONAL or ZONAL database. | `string` | `"REGIONAL"` | no |
 | <a name="input_backup_start_time"></a> [backup\_start\_time](#input\_backup\_start\_time) | Start time in UTC for daily backup job in the format HH:MM. This is the start time of a 4 hour time window. | `string` | `"00:00"` | no |
@@ -59,7 +60,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_database_name"></a> [database\_name](#output\_database\_name) | Name of the default database in the database instance. |
+| <a name="output_databases"></a> [databases](#output\_databases) | Databases created on this instance. |
 | <a name="output_init"></a> [init](#output\_init) | The init module used in the module. |
 | <a name="output_instance"></a> [instance](#output\_instance) | The database instance output, as described in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance. |
 | <a name="output_kubernetes_namespace"></a> [kubernetes\_namespace](#output\_kubernetes\_namespace) | Name of the kubernetes namespace where the connection details configmap and secret are deployed. |

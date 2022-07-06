@@ -46,6 +46,11 @@ variable "generation" {
   }
 }
 
+variable "databases" {
+  description = "The databases to create."
+  type        = list(string)
+}
+
 variable "database_version" {
   description = "The postgres database version."
   type        = string

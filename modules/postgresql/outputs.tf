@@ -17,9 +17,9 @@ output "instance" {
   value       = google_sql_database_instance.main
 }
 
-output "database_name" {
-  description = "Name of the default database in the database instance."
-  value       = google_sql_database.main.name
+output "databases" {
+  description = "Databases created on this instance."
+  value       = var.databases
 }
 
 output "kubernetes_namespace" {

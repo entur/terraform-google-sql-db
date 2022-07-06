@@ -45,7 +45,8 @@ resource "google_sql_database_instance" "main" {
 }
 
 resource "google_sql_database" "main" {
-  name     = var.init.app.name
+  for_each = toset(var.databases)
+  name     = each.key
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
 }
