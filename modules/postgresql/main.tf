@@ -1,5 +1,5 @@
 locals {
-  database_user         = var.database_user != null ? var.database_user : var.init.app.name
+  user_name             = var.user_name != null ? var.user_name : var.init.app.id
   retained_backups      = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
   deletion_protection   = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
   offsite_backup_label  = var.disable_offsite_backup == true && var.init.is_production ? { label_backup_offsite = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
@@ -51,7 +51,7 @@ resource "google_sql_database" "main" {
 }
 
 resource "google_sql_user" "main" {
-  name     = local.database_user
+  name     = local.user_name
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
   password = random_password.password.result

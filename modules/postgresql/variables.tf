@@ -57,7 +57,7 @@ variable "database_version" {
   }
 }
 
-variable "database_user" {
+variable "user_name" {
   description = "The username of the database. Defaults to init.app.name."
   type        = string
   default     = null
