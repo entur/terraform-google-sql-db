@@ -67,7 +67,7 @@ resource "kubernetes_config_map" "main_psql_connection" {
   }
 
   data = {
-    INSTANCES = google_sql_database_instance.main.connection_name
+    INSTANCES = "${google_sql_database_instance.main.connection_name}=tcp:5432"
   }
 }
 resource "random_integer" "password_length" {
