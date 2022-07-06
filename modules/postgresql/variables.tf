@@ -47,7 +47,7 @@ variable "generation" {
 }
 
 variable "databases" {
-  description = "Names of databases to provision."
+  description = "Names of databases to create."
   type        = list(string)
 }
 
