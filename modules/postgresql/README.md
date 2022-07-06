@@ -53,6 +53,7 @@ No modules.
 | <a name="input_region"></a> [region](#input\_region) | The region of this database | `string` | `"europe-west1"` | no |
 | <a name="input_retained_backups"></a> [retained\_backups](#input\_retained\_backups) | The number of backups to retain. 30 for prod, 7 for non prod. | `number` | `null` | no |
 | <a name="input_transaction_log_retention_days"></a> [transaction\_log\_retention\_days](#input\_transaction\_log\_retention\_days) | How long the transaction logs is stored (1-7). | `number` | `7` | no |
+| <a name="input_user_name"></a> [user\_name](#input\_user\_name) | The username of the database. Defaults to init.app.name. | `string` | `null` | no |
 
 ## Outputs
 
