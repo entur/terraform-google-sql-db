@@ -6,11 +6,12 @@ locals {
   labels                = merge(var.init.labels, local.offsite_backup_label)
   generation            = format("%03d", var.generation)
   disk_autoresize_limit = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
+  instance_name         = "sql-${var.init.app.id}-${var.init.environment}-${local.generation}"
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
 resource "google_sql_database_instance" "main" {
-  name             = "sql-${var.init.app.id}-${var.init.environment}-${local.generation}"
+  name             = local.instance_name
   project          = var.init.app.project_id
   database_version = var.database_version
   region           = var.region
@@ -48,13 +49,17 @@ resource "google_sql_database" "main" {
   for_each = toset(var.databases)
   name     = each.key
   project  = var.init.app.project_id
-  instance = google_sql_database_instance.main.name
+  instance = local.instance_name
 }
 
 resource "google_sql_user" "main" {
+  depends_on = [
+    kubernetes_secret.main_database_credentials,
+    google_sql_database_instance.main
+  ]
   name     = local.user_name
   project  = var.init.app.project_id
-  instance = google_sql_database_instance.main.name
+  instance = local.instance_name
   password = random_password.password.result
 }
 
@@ -83,9 +88,6 @@ resource "random_password" "password" {
 }
 
 resource "kubernetes_secret" "main_database_credentials" {
-  depends_on = [
-    google_sql_database_instance.main
-  ]
   metadata {
     name      = "${var.init.app.name}-psql-credentials"
     namespace = var.init.app.name
@@ -94,7 +96,7 @@ resource "kubernetes_secret" "main_database_credentials" {
   data = {
     PGHOST     = "localhost"
     PGPORT     = 5432
-    PGUSER     = google_sql_user.main.name
+    PGUSER     = local.user_name
     PGPASSWORD = random_password.password.result
   }
 }
