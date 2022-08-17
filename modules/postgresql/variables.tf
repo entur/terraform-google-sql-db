@@ -54,7 +54,7 @@ variable "databases" {
 variable "database_version" {
   description = "The PostgreSQL version (see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version)."
   type        = string
-  default     = "POSTGRES_13"
+  default     = "POSTGRES_14"
 
   validation {
     condition     = can(regex("^POSTGRES_[1-9][0-9]$", var.database_version))
