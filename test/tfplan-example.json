@@ -1,0 +1,1338 @@
+{
+	"format_version": "0.1",
+	"terraform_version": "0.13.2",
+	"planned_values": {
+		"root_module": {
+			"child_modules": [
+				{
+					"resources": [
+						{
+							"address": "module.init.data.google_service_account.application_default",
+							"mode": "data",
+							"type": "google_service_account",
+							"name": "application_default",
+							"provider_name": "registry.terraform.io/hashicorp/google",
+							"schema_version": 0,
+							"values": {
+								"account_id": "application",
+								"display_name": "Default Entur application service account",
+								"email": "application@ent-tfmodules-dev.iam.gserviceaccount.com",
+								"id": "projects/ent-tfmodules-dev/serviceAccounts/application@ent-tfmodules-dev.iam.gserviceaccount.com",
+								"name": "projects/ent-tfmodules-dev/serviceAccounts/application@ent-tfmodules-dev.iam.gserviceaccount.com",
+								"project": "ent-tfmodules-dev",
+								"unique_id": "118204801874200700134"
+							}
+						}
+					],
+					"address": "module.init"
+				},
+				{
+					"resources": [
+						{
+							"address": "module.postgresql.google_sql_database.main[\"my-database\"]",
+							"mode": "managed",
+							"type": "google_sql_database",
+							"name": "main",
+							"index": "my-database",
+							"provider_name": "registry.terraform.io/hashicorp/google",
+							"schema_version": 0,
+							"values": {
+								"instance": "sql-tfmodules-dev-001",
+								"name": "my-database",
+								"project": "ent-tfmodules-dev",
+								"timeouts": null
+							}
+						},
+						{
+							"address": "module.postgresql.google_sql_database_instance.main",
+							"mode": "managed",
+							"type": "google_sql_database_instance",
+							"name": "main",
+							"provider_name": "registry.terraform.io/hashicorp/google",
+							"schema_version": 0,
+							"values": {
+								"clone": [],
+								"database_version": "POSTGRES_13",
+								"deletion_protection": false,
+								"name": "sql-tfmodules-dev-001",
+								"project": "ent-tfmodules-dev",
+								"region": "europe-west1",
+								"restore_backup_context": [],
+								"root_password": null,
+								"settings": [
+									{
+										"activation_policy": "ALWAYS",
+										"active_directory_config": [],
+										"availability_type": "REGIONAL",
+										"backup_configuration": [
+											{
+												"backup_retention_settings": [
+													{
+														"retained_backups": 7,
+														"retention_unit": "COUNT"
+													}
+												],
+												"binary_log_enabled": null,
+												"enabled": true,
+												"location": null,
+												"point_in_time_recovery_enabled": true,
+												"start_time": "00:00",
+												"transaction_log_retention_days": 7
+											}
+										],
+										"collation": null,
+										"database_flags": [],
+										"disk_autoresize": true,
+										"disk_autoresize_limit": 50,
+										"disk_type": "PD_SSD",
+										"insights_config": [],
+										"ip_configuration": [
+											{
+												"allocated_ip_range": null,
+												"authorized_networks": [],
+												"ipv4_enabled": true,
+												"private_network": null,
+												"require_ssl": true
+											}
+										],
+										"maintenance_window": [
+											{
+												"day": 2,
+												"hour": 0,
+												"update_track": "stable"
+											}
+										],
+										"pricing_plan": "PER_USE",
+										"sql_server_audit_config": [],
+										"tier": "db-custom-1-3840",
+										"user_labels": {
+											"app": "terraform-modules",
+											"app_id": "tfmodules",
+											"environment": "dev",
+											"owner": "team-plattform",
+											"team": "team-plattform"
+										}
+									}
+								],
+								"timeouts": null
+							}
+						},
+						{
+							"address": "module.postgresql.google_sql_user.main",
+							"mode": "managed",
+							"type": "google_sql_user",
+							"name": "main",
+							"provider_name": "registry.terraform.io/hashicorp/google",
+							"schema_version": 1,
+							"values": {
+								"deletion_policy": null,
+								"instance": "sql-tfmodules-dev-001",
+								"name": "tfmodules",
+								"project": "ent-tfmodules-dev",
+								"sql_server_user_details": [],
+								"timeouts": null,
+								"type": null
+							}
+						},
+						{
+							"address": "module.postgresql.kubernetes_config_map.main_psql_connection",
+							"mode": "managed",
+							"type": "kubernetes_config_map",
+							"name": "main_psql_connection",
+							"provider_name": "registry.terraform.io/hashicorp/kubernetes",
+							"schema_version": 0,
+							"values": {
+								"binary_data": null,
+								"metadata": [
+									{
+										"annotations": null,
+										"generate_name": null,
+										"labels": {
+											"app": "terraform-modules",
+											"app_id": "tfmodules",
+											"environment": "dev",
+											"owner": "team-plattform",
+											"team": "team-plattform"
+										},
+										"name": "terraform-modules-psql-connection",
+										"namespace": "terraform-modules"
+									}
+								]
+							}
+						},
+						{
+							"address": "module.postgresql.kubernetes_secret.main_database_credentials",
+							"mode": "managed",
+							"type": "kubernetes_secret",
+							"name": "main_database_credentials",
+							"provider_name": "registry.terraform.io/hashicorp/kubernetes",
+							"schema_version": 0,
+							"values": {
+								"binary_data": null,
+								"immutable": null,
+								"metadata": [
+									{
+										"annotations": null,
+										"generate_name": null,
+										"labels": {
+											"app": "terraform-modules",
+											"app_id": "tfmodules",
+											"environment": "dev",
+											"owner": "team-plattform",
+											"team": "team-plattform"
+										},
+										"name": "terraform-modules-psql-credentials",
+										"namespace": "terraform-modules"
+									}
+								],
+								"type": "Opaque"
+							}
+						},
+						{
+							"address": "module.postgresql.random_integer.password_length",
+							"mode": "managed",
+							"type": "random_integer",
+							"name": "password_length",
+							"provider_name": "registry.terraform.io/hashicorp/random",
+							"schema_version": 0,
+							"values": {
+								"keepers": null,
+								"max": 64,
+								"min": 32,
+								"seed": null
+							}
+						},
+						{
+							"address": "module.postgresql.random_password.password",
+							"mode": "managed",
+							"type": "random_password",
+							"name": "password",
+							"provider_name": "registry.terraform.io/hashicorp/random",
+							"schema_version": 2,
+							"values": {
+								"keepers": null,
+								"lower": true,
+								"min_lower": 0,
+								"min_numeric": 0,
+								"min_special": 0,
+								"min_upper": 0,
+								"number": true,
+								"numeric": true,
+								"override_special": "!#$%\u0026*()-_=+[]{}\u003c\u003e:?",
+								"special": true,
+								"upper": true
+							}
+						}
+					],
+					"address": "module.postgresql"
+				}
+			]
+		}
+	},
+	"resource_changes": [
+		{
+			"address": "module.init.data.google_service_account.application_default",
+			"module_address": "module.init",
+			"mode": "data",
+			"type": "google_service_account",
+			"name": "application_default",
+			"provider_name": "registry.terraform.io/hashicorp/google",
+			"change": {
+				"actions": [
+					"no-op"
+				],
+				"before": {
+					"account_id": "application",
+					"display_name": "Default Entur application service account",
+					"email": "application@ent-tfmodules-dev.iam.gserviceaccount.com",
+					"id": "projects/ent-tfmodules-dev/serviceAccounts/application@ent-tfmodules-dev.iam.gserviceaccount.com",
+					"name": "projects/ent-tfmodules-dev/serviceAccounts/application@ent-tfmodules-dev.iam.gserviceaccount.com",
+					"project": "ent-tfmodules-dev",
+					"unique_id": "118204801874200700134"
+				},
+				"after": {
+					"account_id": "application",
+					"display_name": "Default Entur application service account",
+					"email": "application@ent-tfmodules-dev.iam.gserviceaccount.com",
+					"id": "projects/ent-tfmodules-dev/serviceAccounts/application@ent-tfmodules-dev.iam.gserviceaccount.com",
+					"name": "projects/ent-tfmodules-dev/serviceAccounts/application@ent-tfmodules-dev.iam.gserviceaccount.com",
+					"project": "ent-tfmodules-dev",
+					"unique_id": "118204801874200700134"
+				},
+				"after_unknown": {}
+			}
+		},
+		{
+			"address": "module.postgresql.google_sql_database.main[\"my-database\"]",
+			"module_address": "module.postgresql",
+			"mode": "managed",
+			"type": "google_sql_database",
+			"name": "main",
+			"index": "my-database",
+			"provider_name": "registry.terraform.io/hashicorp/google",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"instance": "sql-tfmodules-dev-001",
+					"name": "my-database",
+					"project": "ent-tfmodules-dev",
+					"timeouts": null
+				},
+				"after_unknown": {
+					"charset": true,
+					"collation": true,
+					"id": true,
+					"self_link": true
+				}
+			}
+		},
+		{
+			"address": "module.postgresql.google_sql_database_instance.main",
+			"module_address": "module.postgresql",
+			"mode": "managed",
+			"type": "google_sql_database_instance",
+			"name": "main",
+			"provider_name": "registry.terraform.io/hashicorp/google",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"clone": [],
+					"database_version": "POSTGRES_13",
+					"deletion_protection": false,
+					"name": "sql-tfmodules-dev-001",
+					"project": "ent-tfmodules-dev",
+					"region": "europe-west1",
+					"restore_backup_context": [],
+					"root_password": null,
+					"settings": [
+						{
+							"activation_policy": "ALWAYS",
+							"active_directory_config": [],
+							"availability_type": "REGIONAL",
+							"backup_configuration": [
+								{
+									"backup_retention_settings": [
+										{
+											"retained_backups": 7,
+											"retention_unit": "COUNT"
+										}
+									],
+									"binary_log_enabled": null,
+									"enabled": true,
+									"location": null,
+									"point_in_time_recovery_enabled": true,
+									"start_time": "00:00",
+									"transaction_log_retention_days": 7
+								}
+							],
+							"collation": null,
+							"database_flags": [],
+							"disk_autoresize": true,
+							"disk_autoresize_limit": 50,
+							"disk_type": "PD_SSD",
+							"insights_config": [],
+							"ip_configuration": [
+								{
+									"allocated_ip_range": null,
+									"authorized_networks": [],
+									"ipv4_enabled": true,
+									"private_network": null,
+									"require_ssl": true
+								}
+							],
+							"maintenance_window": [
+								{
+									"day": 2,
+									"hour": 0,
+									"update_track": "stable"
+								}
+							],
+							"pricing_plan": "PER_USE",
+							"sql_server_audit_config": [],
+							"tier": "db-custom-1-3840",
+							"user_labels": {
+								"app": "terraform-modules",
+								"app_id": "tfmodules",
+								"environment": "dev",
+								"owner": "team-plattform",
+								"team": "team-plattform"
+							}
+						}
+					],
+					"timeouts": null
+				},
+				"after_unknown": {
+					"clone": [],
+					"connection_name": true,
+					"encryption_key_name": true,
+					"first_ip_address": true,
+					"id": true,
+					"ip_address": true,
+					"master_instance_name": true,
+					"private_ip_address": true,
+					"public_ip_address": true,
+					"replica_configuration": true,
+					"restore_backup_context": [],
+					"self_link": true,
+					"server_ca_cert": true,
+					"service_account_email_address": true,
+					"settings": [
+						{
+							"active_directory_config": [],
+							"backup_configuration": [
+								{
+									"backup_retention_settings": [
+										{}
+									]
+								}
+							],
+							"database_flags": [],
+							"disk_size": true,
+							"insights_config": [],
+							"ip_configuration": [
+								{
+									"authorized_networks": []
+								}
+							],
+							"location_preference": true,
+							"maintenance_window": [
+								{}
+							],
+							"sql_server_audit_config": [],
+							"user_labels": {},
+							"version": true
+						}
+					]
+				}
+			}
+		},
+		{
+			"address": "module.postgresql.google_sql_user.main",
+			"module_address": "module.postgresql",
+			"mode": "managed",
+			"type": "google_sql_user",
+			"name": "main",
+			"provider_name": "registry.terraform.io/hashicorp/google",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"deletion_policy": null,
+					"instance": "sql-tfmodules-dev-001",
+					"name": "tfmodules",
+					"project": "ent-tfmodules-dev",
+					"sql_server_user_details": [],
+					"timeouts": null,
+					"type": null
+				},
+				"after_unknown": {
+					"host": true,
+					"id": true,
+					"password": true,
+					"sql_server_user_details": []
+				}
+			}
+		},
+		{
+			"address": "module.postgresql.kubernetes_config_map.main_psql_connection",
+			"module_address": "module.postgresql",
+			"mode": "managed",
+			"type": "kubernetes_config_map",
+			"name": "main_psql_connection",
+			"provider_name": "registry.terraform.io/hashicorp/kubernetes",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"binary_data": null,
+					"metadata": [
+						{
+							"annotations": null,
+							"generate_name": null,
+							"labels": {
+								"app": "terraform-modules",
+								"app_id": "tfmodules",
+								"environment": "dev",
+								"owner": "team-plattform",
+								"team": "team-plattform"
+							},
+							"name": "terraform-modules-psql-connection",
+							"namespace": "terraform-modules"
+						}
+					]
+				},
+				"after_unknown": {
+					"data": true,
+					"id": true,
+					"metadata": [
+						{
+							"generation": true,
+							"labels": {},
+							"resource_version": true,
+							"uid": true
+						}
+					]
+				}
+			}
+		},
+		{
+			"address": "module.postgresql.kubernetes_secret.main_database_credentials",
+			"module_address": "module.postgresql",
+			"mode": "managed",
+			"type": "kubernetes_secret",
+			"name": "main_database_credentials",
+			"provider_name": "registry.terraform.io/hashicorp/kubernetes",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"binary_data": null,
+					"immutable": null,
+					"metadata": [
+						{
+							"annotations": null,
+							"generate_name": null,
+							"labels": {
+								"app": "terraform-modules",
+								"app_id": "tfmodules",
+								"environment": "dev",
+								"owner": "team-plattform",
+								"team": "team-plattform"
+							},
+							"name": "terraform-modules-psql-credentials",
+							"namespace": "terraform-modules"
+						}
+					],
+					"type": "Opaque"
+				},
+				"after_unknown": {
+					"data": true,
+					"id": true,
+					"metadata": [
+						{
+							"generation": true,
+							"labels": {},
+							"resource_version": true,
+							"uid": true
+						}
+					]
+				}
+			}
+		},
+		{
+			"address": "module.postgresql.random_integer.password_length",
+			"module_address": "module.postgresql",
+			"mode": "managed",
+			"type": "random_integer",
+			"name": "password_length",
+			"provider_name": "registry.terraform.io/hashicorp/random",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"keepers": null,
+					"max": 64,
+					"min": 32,
+					"seed": null
+				},
+				"after_unknown": {
+					"id": true,
+					"result": true
+				}
+			}
+		},
+		{
+			"address": "module.postgresql.random_password.password",
+			"module_address": "module.postgresql",
+			"mode": "managed",
+			"type": "random_password",
+			"name": "password",
+			"provider_name": "registry.terraform.io/hashicorp/random",
+			"change": {
+				"actions": [
+					"create"
+				],
+				"before": null,
+				"after": {
+					"keepers": null,
+					"lower": true,
+					"min_lower": 0,
+					"min_numeric": 0,
+					"min_special": 0,
+					"min_upper": 0,
+					"number": true,
+					"numeric": true,
+					"override_special": "!#$%\u0026*()-_=+[]{}\u003c\u003e:?",
+					"special": true,
+					"upper": true
+				},
+				"after_unknown": {
+					"bcrypt_hash": true,
+					"id": true,
+					"length": true,
+					"result": true
+				}
+			}
+		}
+	],
+	"prior_state": {
+		"format_version": "0.1",
+		"terraform_version": "0.13.2",
+		"values": {
+			"root_module": {
+				"child_modules": [
+					{
+						"resources": [
+							{
+								"address": "module.init.data.google_projects.app_projects",
+								"mode": "data",
+								"type": "google_projects",
+								"name": "app_projects",
+								"provider_name": "registry.terraform.io/hashicorp/google",
+								"schema_version": 0,
+								"values": {
+									"filter": "lifecycleState:ACTIVE labels.purpose:app-project labels.app_id:tfmodules labels.environment:dev",
+									"id": "lifecycleState:ACTIVE labels.purpose:app-project labels.app_id:tfmodules labels.environment:dev",
+									"projects": [
+										{
+											"create_time": "2022-06-30T07:32:14.185Z",
+											"labels": {
+												"app": "terraform-modules",
+												"app_id": "tfmodules",
+												"environment": "dev",
+												"is_prod": "false",
+												"manager": "terraform",
+												"owner": "team-plattform",
+												"purpose": "app-project",
+												"repository": "tf-gcp-apps_app_factory",
+												"team": "team-plattform"
+											},
+											"lifecycle_state": "ACTIVE",
+											"name": "ent-tfmodules-dev",
+											"number": "596567425157",
+											"parent": {
+												"id": "796063853808",
+												"type": "folder"
+											},
+											"project_id": "ent-tfmodules-dev"
+										}
+									]
+								}
+							},
+							{
+								"address": "module.init.data.google_projects.kubernetes_projects",
+								"mode": "data",
+								"type": "google_projects",
+								"name": "kubernetes_projects",
+								"provider_name": "registry.terraform.io/hashicorp/google",
+								"schema_version": 0,
+								"values": {
+									"filter": "lifecycleState:ACTIVE labels.kubernetes:true labels.environment:dev",
+									"id": "lifecycleState:ACTIVE labels.kubernetes:true labels.environment:dev",
+									"projects": [
+										{
+											"create_time": "2022-03-18T09:38:57.788Z",
+											"labels": {
+												"app": "tf-gcp-core-environments",
+												"app_short": "kubernetes",
+												"environment": "dev",
+												"kubernetes": "true",
+												"manager": "terraform",
+												"repository": "tf-gcp-core_environments",
+												"slack": "talk-plattform",
+												"team": "plattform"
+											},
+											"lifecycle_state": "ACTIVE",
+											"name": "ent-kub-dev",
+											"number": "988409480857",
+											"parent": {
+												"id": "825545586622",
+												"type": "folder"
+											},
+											"project_id": "ent-kub-dev"
+										},
+										{
+											"create_time": "2021-11-02T09:19:13.107Z",
+											"labels": {
+												"environment": "dev",
+												"kubernetes": "true",
+												"shared": "true"
+											},
+											"lifecycle_state": "ACTIVE",
+											"name": "ent-dev-shrd-host-prj-001",
+											"number": "677085853089",
+											"parent": {
+												"id": "331744846502",
+												"type": "folder"
+											},
+											"project_id": "ent-dev-shrd-host-prj-001"
+										}
+									]
+								}
+							},
+							{
+								"address": "module.init.data.google_projects.network_projects",
+								"mode": "data",
+								"type": "google_projects",
+								"name": "network_projects",
+								"provider_name": "registry.terraform.io/hashicorp/google",
+								"schema_version": 0,
+								"values": {
+									"filter": "lifecycleState:ACTIVE labels.app_short:network labels.environment:dev",
+									"id": "lifecycleState:ACTIVE labels.app_short:network labels.environment:dev",
+									"projects": [
+										{
+											"create_time": "2021-12-08T10:02:40.673Z",
+											"labels": {
+												"app": "tf-gcp-core-environments",
+												"app_short": "network",
+												"environment": "dev",
+												"manager": "terraform",
+												"repository": "tf-gcp-core_environments",
+												"slack": "talk-plattform",
+												"team": "plattform"
+											},
+											"lifecycle_state": "ACTIVE",
+											"name": "ent-networks-dev-001",
+											"number": "1013286444094",
+											"parent": {
+												"id": "825545586622",
+												"type": "folder"
+											},
+											"project_id": "ent-networks-dev-001"
+										}
+									]
+								}
+							},
+							{
+								"address": "module.init.data.google_service_account.application_default",
+								"mode": "data",
+								"type": "google_service_account",
+								"name": "application_default",
+								"provider_name": "registry.terraform.io/hashicorp/google",
+								"schema_version": 0,
+								"values": {
+									"account_id": "application",
+									"display_name": "Default Entur application service account",
+									"email": "application@ent-tfmodules-dev.iam.gserviceaccount.com",
+									"id": "projects/ent-tfmodules-dev/serviceAccounts/application@ent-tfmodules-dev.iam.gserviceaccount.com",
+									"name": "projects/ent-tfmodules-dev/serviceAccounts/application@ent-tfmodules-dev.iam.gserviceaccount.com",
+									"project": "ent-tfmodules-dev",
+									"unique_id": "118204801874200700134"
+								}
+							}
+						],
+						"address": "module.init"
+					}
+				]
+			}
+		}
+	},
+	"configuration": {
+		"root_module": {
+			"module_calls": {
+				"init": {
+					"source": "github.com/entur/terraform-google-init//modules/init?ref=v0.1.0",
+					"expressions": {
+						"app_id": {
+							"constant_value": "tfmodules"
+						},
+						"environment": {
+							"constant_value": "dev"
+						}
+					},
+					"module": {
+						"outputs": {
+							"app": {
+								"expression": {
+									"references": [
+										"local.app"
+									]
+								},
+								"description": "A map containing essentials about the application (id', 'name', 'project_id', 'owner')."
+							},
+							"environment": {
+								"expression": {
+									"references": [
+										"var.environment"
+									]
+								},
+								"description": "Environment descriptor (i.e. 'dev', 'tst', 'prd')."
+							},
+							"is_production": {
+								"expression": {
+									"references": [
+										"local.is_production"
+									]
+								},
+								"description": "Describes whether the environment in use is a production environment."
+							},
+							"kubernetes": {
+								"expression": {
+									"references": [
+										"local.kubernetes"
+									]
+								},
+								"description": "A map containing essentials about available Kubernetes cluster(s) ('project_id')."
+							},
+							"labels": {
+								"expression": {
+									"references": [
+										"local.app",
+										"var.app_id",
+										"var.environment",
+										"local.app",
+										"local.app"
+									]
+								},
+								"description": "Labels for use on managed resources (i.e. Kubernetes resources)."
+							},
+							"networks": {
+								"expression": {
+									"references": [
+										"local.networks"
+									]
+								},
+								"description": "A map containing essentials about available network(s) ('project_id')."
+							},
+							"service_accounts": {
+								"expression": {
+									"references": [
+										"local.service_accounts"
+									]
+								},
+								"description": "A map containing essentials about application service account(s)."
+							}
+						},
+						"resources": [
+							{
+								"address": "data.google_projects.app_projects",
+								"mode": "data",
+								"type": "google_projects",
+								"name": "app_projects",
+								"provider_config_key": "init:google",
+								"expressions": {
+									"filter": {
+										"references": [
+											"var.app_id",
+											"var.environment"
+										]
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "data.google_projects.kubernetes_projects",
+								"mode": "data",
+								"type": "google_projects",
+								"name": "kubernetes_projects",
+								"provider_config_key": "init:google",
+								"expressions": {
+									"filter": {
+										"references": [
+											"var.environment"
+										]
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "data.google_projects.network_projects",
+								"mode": "data",
+								"type": "google_projects",
+								"name": "network_projects",
+								"provider_config_key": "init:google",
+								"expressions": {
+									"filter": {
+										"references": [
+											"var.environment"
+										]
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "data.google_service_account.application_default",
+								"mode": "data",
+								"type": "google_service_account",
+								"name": "application_default",
+								"provider_config_key": "init:google",
+								"expressions": {
+									"account_id": {
+										"references": [
+											"local.app"
+										]
+									}
+								},
+								"schema_version": 0
+							}
+						],
+						"variables": {
+							"app_id": {
+								"description": "Application ID"
+							},
+							"environment": {
+								"description": "Environment descriptor (i.e. 'dev', 'tst', 'prd')."
+							}
+						}
+					}
+				},
+				"postgresql": {
+					"source": "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v0.1.2",
+					"expressions": {
+						"databases": {
+							"constant_value": [
+								"my-database"
+							]
+						},
+						"init": {
+							"references": [
+								"module.init"
+							]
+						}
+					},
+					"module": {
+						"outputs": {
+							"databases": {
+								"expression": {
+									"references": [
+										"var.databases"
+									]
+								},
+								"description": "Databases created on this instance."
+							},
+							"init": {
+								"expression": {
+									"references": [
+										"var.init"
+									]
+								},
+								"description": "The output of the consumed init module."
+							},
+							"instance": {
+								"expression": {
+									"references": [
+										"google_sql_database_instance.main"
+									]
+								},
+								"description": "The database instance output, as described in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance."
+							},
+							"kubernetes_namespace": {
+								"expression": {
+									"references": [
+										"kubernetes_secret.main_database_credentials"
+									]
+								},
+								"description": "Name of the Kubernetes namespace where config maps and secrets are deployed."
+							},
+							"user": {
+								"sensitive": true,
+								"expression": {
+									"references": [
+										"google_sql_user.main",
+										"random_password.password"
+									]
+								},
+								"description": "Map containing the username and password of the default application user."
+							}
+						},
+						"resources": [
+							{
+								"address": "google_sql_database.main",
+								"mode": "managed",
+								"type": "google_sql_database",
+								"name": "main",
+								"provider_config_key": "postgresql:google",
+								"expressions": {
+									"instance": {
+										"references": [
+											"google_sql_database_instance.main"
+										]
+									},
+									"name": {
+										"references": [
+											"each.key"
+										]
+									},
+									"project": {
+										"references": [
+											"var.init"
+										]
+									}
+								},
+								"schema_version": 0,
+								"for_each_expression": {
+									"references": [
+										"var.databases"
+									]
+								}
+							},
+							{
+								"address": "google_sql_database_instance.main",
+								"mode": "managed",
+								"type": "google_sql_database_instance",
+								"name": "main",
+								"provider_config_key": "postgresql:google",
+								"expressions": {
+									"database_version": {
+										"references": [
+											"var.database_version"
+										]
+									},
+									"deletion_protection": {
+										"references": [
+											"local.deletion_protection"
+										]
+									},
+									"name": {
+										"references": [
+											"var.init",
+											"var.init",
+											"local.generation"
+										]
+									},
+									"project": {
+										"references": [
+											"var.init"
+										]
+									},
+									"region": {
+										"references": [
+											"var.region"
+										]
+									},
+									"settings": [
+										{
+											"availability_type": {
+												"references": [
+													"var.availability_type"
+												]
+											},
+											"backup_configuration": [
+												{
+													"backup_retention_settings": [
+														{
+															"retained_backups": {
+																"references": [
+																	"local.retained_backups"
+																]
+															}
+														}
+													],
+													"enabled": {
+														"references": [
+															"var.enable_backup"
+														]
+													},
+													"point_in_time_recovery_enabled": {
+														"constant_value": true
+													},
+													"start_time": {
+														"references": [
+															"var.backup_start_time"
+														]
+													},
+													"transaction_log_retention_days": {
+														"references": [
+															"var.transaction_log_retention_days"
+														]
+													}
+												}
+											],
+											"disk_autoresize": {
+												"references": [
+													"var.disk_autoresize"
+												]
+											},
+											"disk_autoresize_limit": {
+												"references": [
+													"local.disk_autoresize_limit"
+												]
+											},
+											"disk_size": {
+												"references": [
+													"var.disk_autoresize",
+													"var.disk_size"
+												]
+											},
+											"ip_configuration": [
+												{
+													"require_ssl": {
+														"constant_value": true
+													}
+												}
+											],
+											"maintenance_window": [
+												{
+													"day": {
+														"references": [
+															"var.maintenance_window"
+														]
+													},
+													"hour": {
+														"references": [
+															"var.maintenance_window"
+														]
+													},
+													"update_track": {
+														"constant_value": "stable"
+													}
+												}
+											],
+											"tier": {
+												"references": [
+													"var.machine_size",
+													"var.machine_size"
+												]
+											},
+											"user_labels": {
+												"references": [
+													"local.labels"
+												]
+											}
+										}
+									]
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "google_sql_user.main",
+								"mode": "managed",
+								"type": "google_sql_user",
+								"name": "main",
+								"provider_config_key": "postgresql:google",
+								"expressions": {
+									"instance": {
+										"references": [
+											"google_sql_database_instance.main"
+										]
+									},
+									"name": {
+										"references": [
+											"local.user_name"
+										]
+									},
+									"password": {
+										"references": [
+											"random_password.password"
+										]
+									},
+									"project": {
+										"references": [
+											"var.init"
+										]
+									}
+								},
+								"schema_version": 1
+							},
+							{
+								"address": "kubernetes_config_map.main_psql_connection",
+								"mode": "managed",
+								"type": "kubernetes_config_map",
+								"name": "main_psql_connection",
+								"provider_config_key": "postgresql:kubernetes",
+								"expressions": {
+									"data": {
+										"references": [
+											"google_sql_database_instance.main"
+										]
+									},
+									"metadata": [
+										{
+											"labels": {
+												"references": [
+													"var.init"
+												]
+											},
+											"name": {
+												"references": [
+													"var.init"
+												]
+											},
+											"namespace": {
+												"references": [
+													"var.init"
+												]
+											}
+										}
+									]
+								},
+								"schema_version": 0,
+								"depends_on": [
+									"google_sql_database_instance.main"
+								]
+							},
+							{
+								"address": "kubernetes_secret.main_database_credentials",
+								"mode": "managed",
+								"type": "kubernetes_secret",
+								"name": "main_database_credentials",
+								"provider_config_key": "postgresql:kubernetes",
+								"expressions": {
+									"data": {
+										"references": [
+											"google_sql_user.main",
+											"random_password.password"
+										]
+									},
+									"metadata": [
+										{
+											"labels": {
+												"references": [
+													"var.init"
+												]
+											},
+											"name": {
+												"references": [
+													"var.init"
+												]
+											},
+											"namespace": {
+												"references": [
+													"var.init"
+												]
+											}
+										}
+									]
+								},
+								"schema_version": 0,
+								"depends_on": [
+									"google_sql_database_instance.main"
+								]
+							},
+							{
+								"address": "random_integer.password_length",
+								"mode": "managed",
+								"type": "random_integer",
+								"name": "password_length",
+								"provider_config_key": "postgresql:random",
+								"expressions": {
+									"max": {
+										"constant_value": 64
+									},
+									"min": {
+										"constant_value": 32
+									}
+								},
+								"schema_version": 0
+							},
+							{
+								"address": "random_password.password",
+								"mode": "managed",
+								"type": "random_password",
+								"name": "password",
+								"provider_config_key": "postgresql:random",
+								"expressions": {
+									"length": {
+										"references": [
+											"random_integer.password_length"
+										]
+									},
+									"override_special": {
+										"constant_value": "!#$%\u0026*()-_=+[]{}\u003c\u003e:?"
+									},
+									"special": {
+										"constant_value": true
+									}
+								},
+								"schema_version": 2
+							}
+						],
+						"variables": {
+							"availability_type": {
+								"default": "REGIONAL",
+								"description": "Whether to enable high availability with automatic failover over multiple zones ('REGIONAL') vs. single zone ('ZONAL')."
+							},
+							"backup_start_time": {
+								"default": "00:00",
+								"description": "Start time in UTC for daily backup job in the format HH:MM. This is the start time of a 4 hour time window."
+							},
+							"database_version": {
+								"default": "POSTGRES_13",
+								"description": "The PostgreSQL version (see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version)."
+							},
+							"databases": {
+								"description": "Names of databases to create."
+							},
+							"deletion_protection": {
+								"default": null,
+								"description": "Whether or not to allow Terraform to destroy the instance."
+							},
+							"disable_offsite_backup": {
+								"default": false,
+								"description": "Disable offsite backup for this instance. Offsite backup is only applied to production environments."
+							},
+							"disk_autoresize": {
+								"default": true,
+								"description": "Whether to enable auto-resizing of the storage disk."
+							},
+							"disk_autoresize_limit": {
+								"default": null,
+								"description": "The maximum size an auto-resized disk can reach. Default is 500 for production, 50 for non-production."
+							},
+							"disk_size": {
+								"default": 10,
+								"description": "The storage disk size of the instance. Default is 10 (GB). Only takes effect if disk_autoresize is set to 'false'."
+							},
+							"enable_backup": {
+								"default": true,
+								"description": "Whether to enable daily backup of databases."
+							},
+							"generation": {
+								"default": 1,
+								"description": "The generation (aka serial no.) of the instance. Starts at 1, ends at 999. Will be padded with leading zeros."
+							},
+							"init": {
+								"description": "Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names."
+							},
+							"machine_size": {
+								"default": {
+									"cpu": 1,
+									"memory": 3840
+								},
+								"description": "Map of the database instance CPU count (cpu) and memory sizes in MB (memory)."
+							},
+							"maintenance_window": {
+								"default": {
+									"day": 2,
+									"hour": 0
+								},
+								"description": "The day of the week (1-7), and hour of the day (0-24) in UTC to perform database instance maintenance. This is the start time of the one hour maintinance window."
+							},
+							"region": {
+								"default": "europe-west1",
+								"description": "The region the instance will sit in."
+							},
+							"retained_backups": {
+								"default": null,
+								"description": "The number of backups to retain. Default is 30 for production, 7 for non-production."
+							},
+							"transaction_log_retention_days": {
+								"default": 7,
+								"description": "How long transaction logs are stored (1-7)."
+							},
+							"user_name": {
+								"default": null,
+								"description": "The username of the default application user. Defaults to the app ID."
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
