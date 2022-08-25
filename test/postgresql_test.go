@@ -1,6 +1,7 @@
 package postgresql_test
 
 import (
+	"github.com/gruntwork-io/terratest/modules/logger"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -12,6 +13,7 @@ var _ = Describe("Creating postgres from examples", func() {
 			TerraformDir: "../examples/minimal",
 			PlanFilePath: "tfplan",
 			NoColor:      true,
+			Logger:       logger.Discard,
 		}
 
 		defer terraform.Destroy(GinkgoT(), terraformOptions)
