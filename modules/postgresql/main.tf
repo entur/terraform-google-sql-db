@@ -39,6 +39,9 @@ resource "google_sql_database_instance" "main" {
       hour         = var.maintenance_window.hour
       update_track = "stable"
     }
+    insights_config {
+     query_insights_enabled = var.query_insights_enabled
+    }
   }
 
   deletion_protection = local.deletion_protection

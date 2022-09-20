@@ -147,3 +147,9 @@ variable "disable_offsite_backup" {
   type        = bool
   default     = false
 }
+
+variable "query_insights_enabled" {
+  description = "Whether to enable query insights (7 day retention)."
+  type        = bool
+  default     = false // Default false for non-breaking change
+}
