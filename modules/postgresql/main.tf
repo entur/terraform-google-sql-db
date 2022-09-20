@@ -40,7 +40,7 @@ resource "google_sql_database_instance" "main" {
       update_track = "stable"
     }
     insights_config {
-     query_insights_enabled = var.query_insights_enabled
+      query_insights_enabled = var.query_insights_enabled
     }
   }
 
