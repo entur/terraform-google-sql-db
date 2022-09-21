@@ -153,3 +153,17 @@ variable "query_insights_enabled" {
   type        = bool
   default     = false // Default false for non-breaking change
 }
+
+variable "query_insights_config" {
+  description = "Advanced config for Query Insights."
+  type = object({
+    query_string_length     = number
+    record_application_tags = bool
+    record_client_address   = bool
+  })
+  default = {
+    query_string_length     = 1024
+    record_application_tags = false
+    record_client_address   = false
+  }
+}
