@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/entur/terraform-google-sql-db/compare/v0.1.2...v0.2.0) (2022-09-22)
+
+
+### Features
+
+* Variable for enabling Query Insights ([#15](https://github.com/entur/terraform-google-sql-db/issues/15)) ([a1dcfb2](https://github.com/entur/terraform-google-sql-db/commit/a1dcfb23d540a76fd1eaf66b322e816745b700c5))
+
 ## [0.1.2](https://github.com/entur/terraform-google-sql-db/compare/v0.1.1...v0.1.2) (2022-07-06)
 
 
