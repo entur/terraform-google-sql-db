@@ -1,4 +1,7 @@
-.tool-versions
+# Environment files
+.env
+.envrc
+
 # Local .terraform directories
 **/.terraform/*
 
