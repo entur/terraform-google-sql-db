@@ -20,7 +20,7 @@ variable "region" {
 }
 
 variable "machine_size" {
-  description = "Map of the database instance CPU count (machine_size.cpu) and memory sizes in MB (machine_size.memory), or a tier (machine_size.tier)."
+  description = "Map of the database instance CPU count (cpu) and memory sizes in MB (memory). Optionally, set a tier override (tier)."
   # type = object({
   #   tier   = optional(string) # Optional attributes not supported until Terraform 1.3
   #   cpu    = number
@@ -38,11 +38,11 @@ variable "machine_size" {
   }
   validation {
     condition     = try(var.machine_size.memory, 256) % 256 == 0 && try(var.machine_size.memory, 3840) >= 3840 && try(var.machine_size.memory, 3840) <= 13312
-    error_message = "Memory must be devisable by 256, and between 3840 and 13312."
+    error_message = "Memory must be divisable by 256, and between 3840 and 13312."
   }
   validation {
     condition     = (try(var.machine_size.tier, null) != null) && (try(var.machine_size.cpu, null) == null || try(var.machine_size.memory, null) == null) || (try(var.machine_size.tier, null) == null) && (try(var.machine_size.cpu, null) != null && try(var.machine_size.memory, null) != null)
-    error_message = "Either supply desired resource limits for cpu and memory, or specify a tier."
+    error_message = "Either supply desired resource limits for cpu and memory (recommended), or specify a tier."
   }
 }
 

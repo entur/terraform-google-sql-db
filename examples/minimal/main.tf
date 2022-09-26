@@ -12,5 +12,10 @@ module "postgresql" {
   source    = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v0.2.0"
   init      = module.init
   databases = ["my-database"]
+
+  # machine_size = {
+  #   cpu    = 1
+  #   memory = 3840
+  # }
 }
 # ci: x-release-please-end
