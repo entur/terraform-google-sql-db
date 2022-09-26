@@ -21,7 +21,7 @@ resource "google_sql_database_instance" "main" {
     disk_size             = var.disk_autoresize ? null : var.disk_size # must be null if disk_autoresize is true to avoid instance recreation when the disk expands
     disk_autoresize       = var.disk_autoresize
     disk_autoresize_limit = local.disk_autoresize_limit
-    tier                  = "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}"
+    tier                  = try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}")
     backup_configuration {
       enabled                        = var.enable_backup
       point_in_time_recovery_enabled = true
