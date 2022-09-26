@@ -24,11 +24,5 @@ module "postgresql" {
   #init       = var.init
   generation = random_integer.random_database_generation.result
   databases  = ["my-database", "another-database"]
-
-  machine_size = {
-    tier   = "db-f1-micro"
-    cpu    = 1
-    memory = 3840
-  }
 }
 
