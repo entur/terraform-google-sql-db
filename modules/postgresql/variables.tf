@@ -20,7 +20,7 @@ variable "region" {
 }
 
 variable "machine_size" {
-  description = "Map of the database instance CPU count (cpu) and memory sizes in MB (memory). Optionally, set a tier override (tier)."
+  description = "Map of the database instance CPU count (cpu) and memory sizes in MB (memory). Optionally, set a tier override (tier). See README.md for examples."
   # type = object({
   #   tier   = optional(string) # Optional attributes not supported until Terraform 1.3
   #   cpu    = number

@@ -38,7 +38,7 @@ If a desired machine size and/or availability type is not explicitly set, defaul
 | production     | Dedicated vCPU | 1    | 3840 MB | Yes              |
 
 ### Sizing
-To specify the size of a database instance, supply the `cpu` and `memory` attributes in `var.machine_size`:
+To specify the size of a database instance, supply the `cpu` and `memory` attributes in `var.machine_size` (recommended):
 
 ```
 module "postgresql" {
@@ -46,6 +46,16 @@ module "postgresql" {
   machine_size = {
     cpu    = 1
     memory = 3840
+  }
+}
+```
+
+Tiers can also be set explicitly using the `tier` attribute:
+```
+module "postgresql" {
+  ...
+  machine_size = {
+    tier = "db-f1-micro"
   }
 }
 ```
