@@ -26,8 +26,8 @@ module "postgresql" {
   databases  = ["my-database", "another-database"]
 
   #machine_size = {
-    #cpu    = 1
-    #memory = 3840
+  #cpu    = 1
+  #memory = 3840
   #}
 }
 

@@ -28,9 +28,9 @@ variable "machine_size" {
   # })
   type = map
   #default = {
-    #tier   = "db-f1-micro"
-    #cpu    = 1
-    #memory = 3840
+  #tier   = "db-f1-micro"
+  #cpu    = 1
+  #memory = 3840
   #}
   default = null
   validation {
