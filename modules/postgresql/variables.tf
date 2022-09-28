@@ -27,21 +27,22 @@ variable "machine_size" {
   #   memory = number
   # })
   type = map
-  default = {
-    tier = "db-f1-micro"
+  #default = {
+    #tier   = "db-f1-micro"
     #cpu    = 1
     #memory = 3840
-  }
+  #}
+  default = null
   validation {
-    condition     = try(var.machine_size.cpu, 1) >= 1 && try(var.machine_size.cpu, 1) <= 96
+    condition     = var.machine_size != null ? try(var.machine_size.cpu, 1) >= 1 && try(var.machine_size.cpu, 1) <= 96 : true
     error_message = "CPU must be a whole number between 1 and 96."
   }
   validation {
-    condition     = try(var.machine_size.memory, 256) % 256 == 0 && try(var.machine_size.memory, 3840) >= 3840 && try(var.machine_size.memory, 3840) <= 13312
+    condition     = var.machine_size != null ? try(var.machine_size.memory, 256) % 256 == 0 && try(var.machine_size.memory, 3840) >= 3840 && try(var.machine_size.memory, 3840) <= 13312 : true
     error_message = "Memory must be divisable by 256, and between 3840 and 13312."
   }
   validation {
-    condition     = (try(var.machine_size.tier, null) != null) && (try(var.machine_size.cpu, null) == null || try(var.machine_size.memory, null) == null) || (try(var.machine_size.tier, null) == null) && (try(var.machine_size.cpu, null) != null && try(var.machine_size.memory, null) != null)
+    condition     = var.machine_size != null ? (try(var.machine_size.tier, null) != null) && (try(var.machine_size.cpu, null) == null || try(var.machine_size.memory, null) == null) || (try(var.machine_size.tier, null) == null) && (try(var.machine_size.cpu, null) != null && try(var.machine_size.memory, null) != null) : true
     error_message = "Either supply desired resource limits for cpu and memory (recommended), or specify a tier."
   }
 }
@@ -150,7 +151,7 @@ variable "transaction_log_retention_days" {
 variable "availability_type" {
   description = "Whether to enable high availability with automatic failover over multiple zones ('REGIONAL') vs. single zone ('ZONAL')."
   type        = string
-  default     = "REGIONAL"
+  default     = null
 }
 
 variable "disable_offsite_backup" {
