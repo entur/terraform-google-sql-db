@@ -19,10 +19,15 @@ module "postgresql" {
   # module from GitHub, the 'source' parameter must refer to it's public location.
   # See README.md for instructions.
   # source     = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=vVERSION"
-  source     = "../../modules/postgresql"
-  init       = module.init
+  source = "../../modules/postgresql"
+  init   = module.init
   #init       = var.init
   generation = random_integer.random_database_generation.result
-  databases = [ "my-database", "another-database"] 
+  databases  = ["my-database", "another-database"]
+
+  #machine_size = {
+  #cpu    = 1
+  #memory = 3840
+  #}
 }
 

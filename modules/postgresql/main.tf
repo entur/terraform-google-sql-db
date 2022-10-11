@@ -1,7 +1,15 @@
 locals {
+  # If updated, reflect changes in README.md
+  default_tiers = {
+    prod     = "db-custom-1-3840"
+    non-prod = "db-f1-micro"
+  }
+
   user_name             = var.user_name != null ? var.user_name : var.init.app.id
   retained_backups      = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
   deletion_protection   = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
+  availability_type     = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
+  machine_size          = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
   offsite_backup_label  = var.disable_offsite_backup == true && var.init.is_production ? { label_backup_offsite = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
   labels                = merge(var.init.labels, local.offsite_backup_label)
   generation            = format("%03d", var.generation)
@@ -17,11 +25,11 @@ resource "google_sql_database_instance" "main" {
 
   settings {
     user_labels           = local.labels
-    availability_type     = var.availability_type
+    availability_type     = local.availability_type
     disk_size             = var.disk_autoresize ? null : var.disk_size # must be null if disk_autoresize is true to avoid instance recreation when the disk expands
     disk_autoresize       = var.disk_autoresize
     disk_autoresize_limit = local.disk_autoresize_limit
-    tier                  = "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}"
+    tier                  = local.machine_size
     backup_configuration {
       enabled                        = var.enable_backup
       point_in_time_recovery_enabled = true
