@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.0](https://github.com/entur/terraform-google-sql-db/compare/v0.2.0...v1.0.0) (2022-11-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* use POSTGRES_14 default (#14)
+* Add environment based sizing and availability defaults, support for specifying a machine tier (#17)
+
+### Features
+
+* Add environment based sizing and availability defaults, support for specifying a machine tier ([#17](https://github.com/entur/terraform-google-sql-db/issues/17)) ([ec34ece](https://github.com/entur/terraform-google-sql-db/commit/ec34ece689229746df0b372765f69afe2afefd2c))
+* use POSTGRES_14 default ([#14](https://github.com/entur/terraform-google-sql-db/issues/14)) ([bfec952](https://github.com/entur/terraform-google-sql-db/commit/bfec952b9d9fb70dc838f7eb3d7b0bba3b7b233a))
+
 ## [0.2.0](https://github.com/entur/terraform-google-sql-db/compare/v0.1.2...v0.2.0) (2022-09-22)
 
 
