@@ -14,6 +14,8 @@ locals {
   labels                = merge(var.init.labels, local.offsite_backup_label)
   generation            = format("%03d", var.generation)
   disk_autoresize_limit = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
+  # TODO: optionally filter out user_name if also present in additional_users
+  additional_users = { for user in var.additional_users : user.name => user }
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -111,4 +113,25 @@ resource "kubernetes_secret" "main_database_credentials" {
     PGUSER     = google_sql_user.main.name
     PGPASSWORD = random_password.password.result
   }
+}
+
+resource "google_sql_user" "additional_users" {
+  for_each = local.additional_users
+  name     = each.value.name
+  project  = var.init.app.project_id
+  instance = google_sql_database_instance.main.name
+  password = random_password.additional_users_password[each.key].result
+}
+
+resource "random_integer" "additional_users_password_length" {
+  for_each = local.additional_users
+  min      = 32
+  max      = 64
+}
+
+resource "random_password" "additional_users_password" {
+  for_each         = local.additional_users
+  length           = random_integer.additional_users_password_length[each.key].result
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
 }
