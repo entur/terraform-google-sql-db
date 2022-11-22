@@ -40,9 +40,9 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_additional_users"></a> [additional\_users](#input\_additional\_users) | A list of user-names in addition to the main user that should be created. | `list(string)` | n/a | yes |
 | <a name="input_databases"></a> [databases](#input\_databases) | Names of databases to create. | `list(string)` | n/a | yes |
 | <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br>    app = object({<br>      id         = string<br>      name       = string<br>      owner      = string<br>      project_id = string<br>    })<br>    environment   = string<br>    labels        = map(string)<br>    is_production = bool<br>  })</pre> | n/a | yes |
+| <a name="input_additional_users"></a> [additional\_users](#input\_additional\_users) | A list of user-names in addition to the main user that should be created. | `list(string)` | `[]` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | Whether to enable high availability with automatic failover over multiple zones ('REGIONAL') vs. single zone ('ZONAL'). | `string` | `null` | no |
 | <a name="input_backup_start_time"></a> [backup\_start\_time](#input\_backup\_start\_time) | Start time in UTC for daily backup job in the format HH:MM. This is the start time of a 4 hour time window. | `string` | `"00:00"` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | The PostgreSQL version (see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version). | `string` | `"POSTGRES_14"` | no |
