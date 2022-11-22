@@ -15,7 +15,7 @@ locals {
   generation            = format("%03d", var.generation)
   disk_autoresize_limit = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
   # TODO: optionally filter out user_name if also present in additional_users
-  additional_users = { for user in var.additional_users : user.name => user }
+  additional_users = toset(var.additional_users)
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -117,7 +117,7 @@ resource "kubernetes_secret" "main_database_credentials" {
 
 resource "google_sql_user" "additional_users" {
   for_each = local.additional_users
-  name     = each.value.name
+  name     = each.value
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
   password = random_password.additional_users_password[each.key].result
