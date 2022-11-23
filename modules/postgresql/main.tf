@@ -74,6 +74,7 @@ resource "google_sql_user" "main" {
 }
 
 resource "kubernetes_config_map" "main_psql_connection" {
+  count = var.create_kubernetes_resources ? 1 : 0
   depends_on = [
     google_sql_database_instance.main
   ]
@@ -98,6 +99,7 @@ resource "random_password" "password" {
 }
 
 resource "kubernetes_secret" "main_database_credentials" {
+  count = var.create_kubernetes_resources ? 1 : 0
   depends_on = [
     google_sql_database_instance.main
   ]

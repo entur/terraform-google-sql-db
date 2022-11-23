@@ -191,3 +191,9 @@ variable "query_insights_config" {
     record_client_address   = false
   }
 }
+
+variable "create_kubernetes_resources" {
+  description = "Optionally disables creating k8s resources -psql-connection and -psql-credentials. Can be used to avoic overwriting existing resources on database creation."
+  type        = bool
+  default     = true
+}
