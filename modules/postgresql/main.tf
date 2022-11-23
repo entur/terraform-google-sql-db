@@ -14,8 +14,7 @@ locals {
   labels                = merge(var.init.labels, local.offsite_backup_label)
   generation            = format("%03d", var.generation)
   disk_autoresize_limit = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
-  # TODO: optionally filter out user_name if also present in additional_users
-  additional_users = toset(var.additional_users)
+  additional_users      = toset([for user in var.additional_users : user if user != local.user_name])
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
