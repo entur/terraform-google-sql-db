@@ -82,12 +82,16 @@ variable "user_name" {
 
 variable "additional_users" {
   description = "A list of user-names in addition to the main user that should be created."
-  type        = list(string)
-  default     = []
+  type = map(object({
+    username                 = string
+    create_kubernetes_secret = bool
+  }))
+  default = {}
+  # validate username since it is used in k8s resource-names
   validation {
     condition = length([
-      for user in var.additional_users : true if can(regex("^[0-9a-z-]+$", user))
-    ]) == length(var.additional_users)
+      for user in values(var.additional_users) : true if can(regex("^[0-9a-z-]+$", user.username))
+    ]) == length(values(var.additional_users))
     error_message = "Username must match regex '[0-9a-z-]'."
   }
 }

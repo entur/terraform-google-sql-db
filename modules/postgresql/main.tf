@@ -5,16 +5,17 @@ locals {
     non-prod = "db-f1-micro"
   }
 
-  user_name             = var.user_name != null ? var.user_name : var.init.app.id
-  retained_backups      = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
-  deletion_protection   = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
-  availability_type     = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
-  machine_size          = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
-  offsite_backup_label  = var.disable_offsite_backup == true && var.init.is_production ? { label_backup_offsite = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
-  labels                = merge(var.init.labels, local.offsite_backup_label)
-  generation            = format("%03d", var.generation)
-  disk_autoresize_limit = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
-  additional_users      = toset([for user in var.additional_users : user if user != local.user_name])
+  user_name                   = var.user_name != null ? var.user_name : var.init.app.id
+  retained_backups            = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
+  deletion_protection         = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
+  availability_type           = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
+  machine_size                = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
+  offsite_backup_label        = var.disable_offsite_backup == true && var.init.is_production ? { label_backup_offsite = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
+  labels                      = merge(var.init.labels, local.offsite_backup_label)
+  generation                  = format("%03d", var.generation)
+  disk_autoresize_limit       = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
+  additional_users            = { for key, value in var.additional_users : key => value if value.username != local.user_name }
+  additional_user_credentials = ! var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -118,7 +119,7 @@ resource "kubernetes_secret" "main_database_credentials" {
 
 resource "google_sql_user" "additional_users" {
   for_each = local.additional_users
-  name     = each.value
+  name     = each.value.username
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
   password = random_password.additional_users_password[each.key].result
@@ -136,3 +137,22 @@ resource "random_password" "additional_users_password" {
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
+
+resource "kubernetes_secret" "additional_database_credentials" {
+  for_each = local.additional_user_credentials
+  depends_on = [
+    google_sql_database_instance.main
+  ]
+  metadata {
+    name      = "${var.init.app.name}-${each.value.username}-psql-credentials"
+    namespace = var.init.app.name
+    labels    = var.init.labels
+  }
+  data = {
+    PGHOST     = "localhost"
+    PGPORT     = 5432
+    PGUSER     = google_sql_user.additional_users[each.key].name
+    PGPASSWORD = random_password.additional_users_password[each.key].result
+  }
+}
+
