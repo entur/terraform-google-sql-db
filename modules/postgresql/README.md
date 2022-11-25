@@ -27,10 +27,14 @@ No modules.
 |------|------|
 | [google_sql_database.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database) | resource |
 | [google_sql_database_instance.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance) | resource |
+| [google_sql_user.additional_users](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
 | [google_sql_user.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
 | [kubernetes_config_map.main_psql_connection](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
+| [kubernetes_secret.additional_database_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
 | [kubernetes_secret.main_database_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
+| [random_integer.additional_users_password_length](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [random_integer.password_length](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
+| [random_password.additional_users_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 
 ## Inputs
@@ -39,6 +43,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_databases"></a> [databases](#input\_databases) | Names of databases to create. | `list(string)` | n/a | yes |
 | <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br>    app = object({<br>      id         = string<br>      name       = string<br>      owner      = string<br>      project_id = string<br>    })<br>    environment   = string<br>    labels        = map(string)<br>    is_production = bool<br>  })</pre> | n/a | yes |
+| <a name="input_additional_users"></a> [additional\_users](#input\_additional\_users) | A list of user-names in addition to the main user that should be created. | <pre>map(object({<br>    username                 = string<br>    create_kubernetes_secret = bool<br>  }))</pre> | `{}` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | Whether to enable high availability with automatic failover over multiple zones ('REGIONAL') vs. single zone ('ZONAL'). | `string` | `null` | no |
 | <a name="input_backup_start_time"></a> [backup\_start\_time](#input\_backup\_start\_time) | Start time in UTC for daily backup job in the format HH:MM. This is the start time of a 4 hour time window. | `string` | `"00:00"` | no |
 | <a name="input_create_kubernetes_resources"></a> [create\_kubernetes\_resources](#input\_create\_kubernetes\_resources) | Optionally disables creating k8s resources -psql-connection and -psql-credentials. Can be used to avoic overwriting existing resources on database creation. | `bool` | `true` | no |
@@ -63,6 +68,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_additional_users"></a> [additional\_users](#output\_additional\_users) | Map containing the username and password for any additional users. |
 | <a name="output_databases"></a> [databases](#output\_databases) | Databases created on this instance. |
 | <a name="output_init"></a> [init](#output\_init) | The output of the consumed init module. |
 | <a name="output_instance"></a> [instance](#output\_instance) | The database instance output, as described in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance. |

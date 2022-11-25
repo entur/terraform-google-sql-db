@@ -12,6 +12,17 @@ output "user" {
   }
 }
 
+output "additional_users" {
+  description = "Map containing the username and password for any additional users."
+  sensitive   = true
+  value = {
+    for key in keys(local.additional_users) : key => {
+      username = google_sql_user.additional_users[key].name
+      password = random_password.additional_users_password[key].result
+    }
+  }
+}
+
 output "instance" {
   description = "The database instance output, as described in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance."
   value       = google_sql_database_instance.main
