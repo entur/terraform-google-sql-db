@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/entur/terraform-google-sql-db/compare/v1.0.0...v1.1.0) (2022-11-25)
+
+
+### Features
+
+* Adds an option to disable k8s resources via variable ([#21](https://github.com/entur/terraform-google-sql-db/issues/21)) ([2c0499d](https://github.com/entur/terraform-google-sql-db/commit/2c0499dbb1d4e100ed6b298d8d1b26a0ab98adc7))
+* Support additional users ([#22](https://github.com/entur/terraform-google-sql-db/issues/22)) ([9233d30](https://github.com/entur/terraform-google-sql-db/commit/9233d30e107b0e15fef6da43da6b0cdf7898bd4b))
+
 ## [1.0.0](https://github.com/entur/terraform-google-sql-db/compare/v0.2.0...v1.0.0) (2022-11-03)
 
 
