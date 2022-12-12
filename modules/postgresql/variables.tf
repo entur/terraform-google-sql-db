@@ -196,6 +196,15 @@ variable "query_insights_config" {
   }
 }
 
+variable "database_flags" {
+  description = "Override default CloudSQL configuration by specifying database-flags."
+  type = map(object({
+    name  = string
+    value = string
+  }))
+  default = {}
+}
+
 variable "create_kubernetes_resources" {
   description = "Optionally disables creating k8s resources -psql-connection and -psql-credentials. Can be used to avoic overwriting existing resources on database creation."
   type        = bool

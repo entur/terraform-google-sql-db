@@ -55,6 +55,13 @@ resource "google_sql_database_instance" "main" {
       record_client_address   = var.query_insights_config.record_client_address
       record_application_tags = var.query_insights_config.record_application_tags
     }
+    dynamic "database_flags" {
+      for_each = var.database_flags
+      content {
+        name  = database_flags.value.name
+        value = database_flags.value.value
+      }
+    }
   }
 
   deletion_protection = local.deletion_protection
