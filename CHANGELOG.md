@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/entur/terraform-google-sql-db/compare/v1.1.0...v1.2.0) (2022-12-12)
+
+
+### Features
+
+* Support specifying database-flags for custom configuration ([#26](https://github.com/entur/terraform-google-sql-db/issues/26)) ([63c6a82](https://github.com/entur/terraform-google-sql-db/commit/63c6a822b9991617231163e95022973ba343683a))
+
 ## [1.1.0](https://github.com/entur/terraform-google-sql-db/compare/v1.0.0...v1.1.0) (2022-11-25)
 
 
