@@ -35,8 +35,6 @@ No modules.
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | Override default CloudSQL configuration by specifying database-flags. | <pre>map(object({<br>    name  = string<br>    value = string<br>  }))</pre> | `{}` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Whether or not to allow Terraform to destroy the instance. | `bool` | `null` | no |
 | <a name="input_machine_size_override"></a> [machine\_size\_override](#input\_machine\_size\_override) | By default, machine\_size will be the same as the master. Set this variable to override. Keep in mind that replica must have equal or higher machine\_size. See README.md for examples. | `map` | `null` | no |
-| <a name="input_query_insights_config"></a> [query\_insights\_config](#input\_query\_insights\_config) | Advanced config for Query Insights. | <pre>object({<br>    query_string_length     = number<br>    record_application_tags = bool<br>    record_client_address   = bool<br>  })</pre> | <pre>{<br>  "query_string_length": 1024,<br>  "record_application_tags": false,<br>  "record_client_address": false<br>}</pre> | no |
-| <a name="input_query_insights_enabled"></a> [query\_insights\_enabled](#input\_query\_insights\_enabled) | Whether to enable query insights (7 day retention). | `bool` | `false` | no |
 | <a name="input_replica_number"></a> [replica\_number](#input\_replica\_number) | The replica-number of the instance in the case of many. Starts at 1, ends at 999. Will be padded with leading zeros. Used as suffix for the instance-name | `number` | `1` | no |
 
 ## Outputs
