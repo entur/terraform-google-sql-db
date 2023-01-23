@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/entur/terraform-google-sql-db/compare/v1.2.0...v1.3.0) (2023-01-23)
+
+
+### Features
+
+* New module postgresql-replica ([#28](https://github.com/entur/terraform-google-sql-db/issues/28)) ([c71b2ac](https://github.com/entur/terraform-google-sql-db/commit/c71b2ac1df87e6f982759129ae54f33442ecb01e))
+
 ## [1.2.0](https://github.com/entur/terraform-google-sql-db/compare/v1.1.0...v1.2.0) (2022-12-12)
 
 
