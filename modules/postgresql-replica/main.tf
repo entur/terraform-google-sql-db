@@ -1,6 +1,6 @@
 locals {
   machine_size   = var.machine_size_override != null ? try(var.machine_size_override.tier, "db-custom-${var.machine_size_override.cpu}-${var.machine_size_override.memory}") : var.master_instance.settings[0].tier
-  labels         = merge(var.master_instance.settings[0].user_labels, { label_backup_offsite = false })
+  labels         = merge(var.master_instance.settings[0].user_labels, { offsite_enabled = false })
   replica_number = format("%03d", var.replica_number)
 }
 
