@@ -13,9 +13,9 @@ variable "init" {
   })
 }
 
-variable "master_instance_name" {
-  type        = string
-  description = "The name of the master instance to create a read-replica for."
+variable "master_instance" {
+  type        = any # TODO: what can we do here?
+  description = "The master instance to create a read-replica for. Must be a 'google_sql_database_instance' from either the master resource or data."
 }
 
 variable "machine_size_override" {
