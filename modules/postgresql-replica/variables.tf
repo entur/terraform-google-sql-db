@@ -14,7 +14,7 @@ variable "init" {
 }
 
 variable "master_instance" {
-  type        = any # TODO: what can we do here?
+  type        = any # can we do any more advanced typing here?
   description = "The master instance to create a read-replica for. Must be a 'google_sql_database_instance' from either the master resource or data."
 }
 
