@@ -26,12 +26,13 @@ resource "google_sql_database_instance" "main" {
   region           = var.region
 
   settings {
-    user_labels           = local.labels
-    availability_type     = local.availability_type
-    disk_size             = var.disk_autoresize ? null : var.disk_size # must be null if disk_autoresize is true to avoid instance recreation when the disk expands
-    disk_autoresize       = var.disk_autoresize
-    disk_autoresize_limit = local.disk_autoresize_limit
-    tier                  = local.machine_size
+    user_labels                 = local.labels
+    availability_type           = local.availability_type
+    deletion_protection_enabled = var.deletion_protection
+    disk_size                   = var.disk_autoresize ? null : var.disk_size # must be null if disk_autoresize is true to avoid instance recreation when the disk expands
+    disk_autoresize             = var.disk_autoresize
+    disk_autoresize_limit       = local.disk_autoresize_limit
+    tier                        = local.machine_size
     backup_configuration {
       enabled                        = var.enable_backup
       point_in_time_recovery_enabled = true
