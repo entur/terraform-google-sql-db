@@ -57,12 +57,6 @@ variable "replica_number" {
   }
 }
 
-variable "deletion_protection" {
-  description = "Whether or not to allow Terraform to destroy the instance."
-  type        = bool
-  default     = null
-}
-
 variable "availability_type" {
   description = "Whether to enable high availability with automatic failover to another read-replica. 'REGIONAL' for HA, 'ZONAL' for single zone."
   type        = string

@@ -1,8 +1,7 @@
 locals {
-  deletion_protection = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
-  machine_size        = var.machine_size_override != null ? try(var.machine_size_override.tier, "db-custom-${var.machine_size_override.cpu}-${var.machine_size_override.memory}") : var.master_instance.settings[0].tier
-  labels              = merge(var.master_instance.settings[0].user_labels, { label_backup_offsite = false })
-  replica_number      = format("%03d", var.replica_number)
+  machine_size   = var.machine_size_override != null ? try(var.machine_size_override.tier, "db-custom-${var.machine_size_override.cpu}-${var.machine_size_override.memory}") : var.master_instance.settings[0].tier
+  labels         = merge(var.master_instance.settings[0].user_labels, { label_backup_offsite = false })
+  replica_number = format("%03d", var.replica_number)
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -21,7 +20,7 @@ resource "google_sql_database_instance" "replica" {
   settings {
     user_labels                 = local.labels
     availability_type           = var.availability_type
-    deletion_protection_enabled = local.deletion_protection
+    deletion_protection_enabled = var.master_instance.settings[0].deletion_protection_enabled
     # disk_size properties is inherited from the master, adding to ignore_changes
     # maintenance_window not set for read-replicas, adding to ignore_changes
     tier = local.machine_size
@@ -43,7 +42,7 @@ resource "google_sql_database_instance" "replica" {
     }
   }
 
-  deletion_protection = local.deletion_protection
+  deletion_protection = var.master_instance.deletion_protection
 
   # Inspired by https://github.com/terraform-google-modules/terraform-google-sql-db/blob/master/modules/postgresql/read_replica.tf#L108
   lifecycle {
