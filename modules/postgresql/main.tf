@@ -10,7 +10,7 @@ locals {
   deletion_protection         = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
   availability_type           = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
   machine_size                = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
-  offsite_backup_label        = var.disable_offsite_backup == true && var.init.is_production ? { label_backup_offsite = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
+  offsite_backup_label        = var.disable_offsite_backup == true && var.init.is_production ? { offsite_enabled = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
   labels                      = merge(var.init.labels, local.offsite_backup_label)
   generation                  = format("%03d", var.generation)
   disk_autoresize_limit       = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
