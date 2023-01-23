@@ -23,14 +23,13 @@ No modules.
 | Name | Type |
 |------|------|
 | [google_sql_database_instance.replica](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance) | resource |
-| [google_sql_database_instance.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/sql_database_instance) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br>    app = object({<br>      id         = string<br>      name       = string<br>      owner      = string<br>      project_id = string<br>    })<br>    environment   = string<br>    labels        = map(string)<br>    is_production = bool<br>  })</pre> | n/a | yes |
-| <a name="input_master_instance_name"></a> [master\_instance\_name](#input\_master\_instance\_name) | The name of the master instance to create a read-replica for. | `string` | n/a | yes |
+| <a name="input_master_instance"></a> [master\_instance](#input\_master\_instance) | The master instance to create a read-replica for. Must be a 'google\_sql\_database\_instance' from either the master resource or data. | `any` | n/a | yes |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | Whether to enable high availability with automatic failover to another read-replica. 'REGIONAL' for HA, 'ZONAL' for single zone. | `string` | `null` | no |
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | Override default CloudSQL configuration by specifying database-flags. | <pre>map(object({<br>    name  = string<br>    value = string<br>  }))</pre> | `{}` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | Whether or not to allow Terraform to destroy the instance. | `bool` | `null` | no |
