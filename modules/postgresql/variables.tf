@@ -136,6 +136,12 @@ variable "backup_start_time" {
   }
 }
 
+variable "point_in_time_recovery_enabled" {
+  description = "Whether to enable PITR on database instance. Requires enable_backup to be true."
+  type        = bool
+  default     = true
+}
+
 variable "maintenance_window" {
   description = "The day of the week (1-7), and hour of the day (0-24) in UTC to perform database instance maintenance. This is the start time of the one hour maintinance window."
   type = object({
