@@ -26,7 +26,7 @@ variable "machine_size" {
   #   cpu    = number
   #   memory = number
   # })
-  type = map
+  type = map(any)
   #default = {
   #tier   = "db-f1-micro"
   #cpu    = 1
@@ -134,6 +134,12 @@ variable "backup_start_time" {
     condition     = can(regex("^[0-2][0-9]:[0-6][0-9]", var.backup_start_time))
     error_message = "Start time must be in the format HH:MM."
   }
+}
+
+variable "point_in_time_recovery_enabled" {
+  description = "Whether to enable PITR on database instance."
+  type        = bool
+  default     = true
 }
 
 variable "maintenance_window" {
