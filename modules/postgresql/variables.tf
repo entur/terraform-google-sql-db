@@ -137,7 +137,7 @@ variable "backup_start_time" {
 }
 
 variable "point_in_time_recovery_enabled" {
-  description = "Whether to enable PITR on database instance."
+  description = "Whether to enable PITR on database instance. Requires enable_backup to be true."
   type        = bool
   default     = true
 }
