@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/entur/terraform-google-sql-db/compare/v1.3.0...v1.3.1) (2023-05-10)
+
+
+### Bug Fixes
+
+* `point_in_time_recovery_enabled` input, default true ([#32](https://github.com/entur/terraform-google-sql-db/issues/32)) ([48c31bd](https://github.com/entur/terraform-google-sql-db/commit/48c31bd451ed74d845df55f5b5906a009dca47dc))
+
 ## [1.3.0](https://github.com/entur/terraform-google-sql-db/compare/v1.2.0...v1.3.0) (2023-01-23)
 
 
