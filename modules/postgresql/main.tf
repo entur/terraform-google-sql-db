@@ -16,7 +16,6 @@ locals {
   disk_autoresize_limit       = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
   additional_users            = { for key, value in var.additional_users : key => value if value.username != local.user_name }
   additional_user_credentials = ! var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
-  authorized_networks         = length(var.authorized_networks) != 0 ? var.authorized_networks : []
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -45,11 +44,11 @@ resource "google_sql_database_instance" "main" {
     ip_configuration {
       require_ssl = true
       dynamic "authorized_networks" {
-        for_each = local.authorized_networks
+        for_each = var.authorized_networks
         iterator = authnet
         content {
-          name = "IP or Range allowed: ${authnet.key}"
-          value= authnet.value
+          name  = authnet.value.name
+          value = authnet.value.value
         }
 
       }
