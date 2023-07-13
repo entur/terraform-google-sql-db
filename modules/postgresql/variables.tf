@@ -216,3 +216,9 @@ variable "create_kubernetes_resources" {
   type        = bool
   default     = true
 }
+
+variable "authorized_networks" {
+  description = "Values for authorized_networks, simple strings with IPs or CIDRs. Ex: 35.90.103.132/30 or 35.90.103.132"
+  type        = list(string)
+  default     = []
+}
