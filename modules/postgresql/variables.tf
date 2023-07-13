@@ -218,10 +218,10 @@ variable "create_kubernetes_resources" {
 }
 
 variable "authorized_networks" {
-  description = "Values for authorized_networks, simple strings with IPs or CIDRs. Ex: 35.90.103.132/30 or 35.90.103.132"
-  type        = map(object({
+  description = "Values for authorized_networks, list of objects with name and simple strings of IPs or CIDRs. Ex: {name: supermachine, value: 35.90.103.132/30} or {name: rogersmachine, value: 35.90.103.132}"
+  type        = list(object({
     value = string
     name = string
   }))
-  default     = {}
+  default     = []
 }
