@@ -26,7 +26,7 @@ variable "machine_size" {
   #   cpu    = number
   #   memory = number
   # })
-  type = map
+  type = map(any)
   #default = {
   #tier   = "db-f1-micro"
   #cpu    = 1
@@ -219,9 +219,9 @@ variable "create_kubernetes_resources" {
 
 variable "authorized_networks" {
   description = "Values for authorized_networks, list of objects with name and simple strings of IPs or CIDRs. Ex: {name: supermachine, value: 35.90.103.132/30} or {name: rogersmachine, value: 35.90.103.132}"
-  type        = list(object({
+  type = list(object({
     value = string
-    name = string
+    name  = string
   }))
-  default     = []
+  default = []
 }
