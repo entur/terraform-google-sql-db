@@ -25,7 +25,7 @@ variable "machine_size_override" {
   #   cpu    = number
   #   memory = number
   # })
-  type = map(any)
+  type = map
   #default = {
   #tier   = "db-f1-micro"
   #cpu    = 1
