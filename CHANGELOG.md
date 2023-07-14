@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/entur/terraform-google-sql-db/compare/v1.3.1...v1.4.0) (2023-07-14)
+
+
+### Features
+
+* open up for modifying allowed networks ([#35](https://github.com/entur/terraform-google-sql-db/issues/35)) ([b5ac641](https://github.com/entur/terraform-google-sql-db/commit/b5ac6411dacc2c9a9231ab9f4a2a165b285b0a65))
+
 ## [1.3.1](https://github.com/entur/terraform-google-sql-db/compare/v1.3.0...v1.3.1) (2023-05-10)
 
 
