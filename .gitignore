@@ -1,6 +1,8 @@
 .tool-versions
 # Local .terraform directories
 **/.terraform/*
+# Local lock file
+**/.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate
@@ -20,3 +22,6 @@ tfplan
 
 # .auto.var files
 *.auto.tfvars
+
+# Pycharm
+.idea

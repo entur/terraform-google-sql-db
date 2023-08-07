@@ -172,3 +172,35 @@ resource "kubernetes_secret" "additional_database_credentials" {
   }
 }
 
+locals {
+  credentials = {
+    PGHOST     = "localhost",
+    PGPORT     = 5432,
+    PGUSER     = google_sql_user.main.name,
+    PGPASSWORD = random_password.password.result,
+    PGINSTANCES  = google_sql_database_instance.main.connection_name
+  }
+}
+
+resource "google_secret_manager_secret" "db_secret" {
+  for_each  = local.credentials
+  secret_id = "${var.init.app.id}-psql-credentials_${each.key}"
+  labels    = var.init.labels
+  project   = var.init.app.project_id
+  replication {
+    user_managed {
+      replicas {
+        location = var.region
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "db_secret_version_main_database_credentials" {
+  depends_on = [
+    google_sql_database_instance.main
+  ]
+  for_each    = local.credentials
+  secret      = google_secret_manager_secret.db_secret[each.key].id
+  secret_data = each.value
+}
