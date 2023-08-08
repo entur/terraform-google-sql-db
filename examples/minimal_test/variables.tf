@@ -17,7 +17,3 @@ variable "init" {
     is_production = false
   }
 }
-
-variable "generation" {
-  default = 1
-}
