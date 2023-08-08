@@ -15,7 +15,7 @@ locals {
   generation                  = format("%03d", var.generation)
   disk_autoresize_limit       = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
   additional_users            = { for key, value in var.additional_users : key => value if value.username != local.user_name }
-  additional_user_credentials = ! var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
+  additional_user_credentials = !var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -174,11 +174,11 @@ resource "kubernetes_secret" "additional_database_credentials" {
 
 locals {
   credentials = {
-    PGHOST     = "localhost",
-    PGPORT     = 5432,
-    PGUSER     = google_sql_user.main.name,
-    PGPASSWORD = random_password.password.result,
-    PGINSTANCES  = google_sql_database_instance.main.connection_name
+    PGHOST      = "localhost",
+    PGPORT      = 5432,
+    PGUSER      = google_sql_user.main.name,
+    PGPASSWORD  = random_password.password.result,
+    PGINSTANCES = google_sql_database_instance.main.connection_name
   }
 }
 
