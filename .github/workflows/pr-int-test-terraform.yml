@@ -20,7 +20,7 @@ jobs:
       contents: 'read'
       id-token: 'write'
 
-    name: Integration test Bucket module
+    name: Integration test Cloud SQL module
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
