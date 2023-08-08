@@ -5,5 +5,5 @@ output "instance_name" {
 
 output "project_id" {
   description = "Project ID"
-  value = module.init.app.project_id
+  value       = module.init.app.project_id
 }
