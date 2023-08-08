@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/entur/terraform-google-sql-db/compare/v1.4.0...v1.5.0) (2023-08-08)
+
+
+### Features
+
+* Add integration test ([#37](https://github.com/entur/terraform-google-sql-db/issues/37)) ([b0bbbb0](https://github.com/entur/terraform-google-sql-db/commit/b0bbbb03b186b44cfc9fb5b57fd2fffbea83e7d5))
+
 ## [1.4.0](https://github.com/entur/terraform-google-sql-db/compare/v1.3.1...v1.4.0) (2023-07-14)
 
 
