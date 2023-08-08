@@ -15,6 +15,8 @@ const exampleDir = "../../examples/minimal_test"
 
 func TestCloudSql(t *testing.T) {
 
+	const db_user = "tfmodules-psql-credentials_PGUSER"
+
 	cloudSqlT := tft.NewTFBlueprintTest(t,
 		tft.WithTFDir(exampleDir),
 	)
@@ -29,6 +31,13 @@ func TestCloudSql(t *testing.T) {
 		assert.Equal("sql#maintenanceWindow", db.Get("settings.maintenanceWindow.kind").String(), "Expected sql#maintenanceWindow maintenanceWindow.kind")
 		assert.Equal(int64(2), db.Get("settings.maintenanceWindow.day").Int(), "Expected 2 maintenanceWindow.day")
 		assert.Equal(int64(0), db.Get("settings.maintenanceWindow.hour").Int(), "Expected 0 maintenanceWindow.hour")
+
+		// test secret manager uploads
+		sc := gcloud.Run(t, fmt.Sprintf("secrets describe %s", db_user))
+		assert.Contains(sc.Get("name").String(), cloudSqlT.GetStringOutput("app_id"), "Secret for app is created in SM")
+
+		sc2 := gcloud.Run(t, fmt.Sprintf("secrets list"))
+		assert.GreaterOrEqual(sc2.Get("totalSize"), 1, "There should be at least one secret created")
 	})
 
 	cloudSqlT.Test()
