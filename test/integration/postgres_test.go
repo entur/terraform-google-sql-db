@@ -33,7 +33,7 @@ func TestCloudSql(t *testing.T) {
 		assert.Equal(int64(0), db.Get("settings.maintenanceWindow.hour").Int(), "Expected 0 maintenanceWindow.hour")
 
 		// test secret manager uploads
-		sc := gcloud.Run(t, fmt.Sprintf("secrets describe %s", db_user))
+		sc := gcloud.Run(t, fmt.Sprintf("secrets describe %s --project %s", db_user, cloudSqlT.GetStringOutput("project_id")))
 		assert.Contains(sc.Get("name").String(), cloudSqlT.GetStringOutput("app_id"), "Secret for app is created in SM")
 
 		sc2 := gcloud.Run(t, fmt.Sprintf("secrets list"))
