@@ -17,3 +17,4 @@ variable "init" {
     is_production = false
   }
 }
+

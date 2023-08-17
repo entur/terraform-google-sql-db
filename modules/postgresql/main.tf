@@ -15,7 +15,7 @@ locals {
   generation                  = format("%03d", var.generation)
   disk_autoresize_limit       = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
   additional_users            = { for key, value in var.additional_users : key => value if value.username != local.user_name }
-  additional_user_credentials = !var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
+  additional_user_credentials = ! var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -174,17 +174,17 @@ resource "kubernetes_secret" "additional_database_credentials" {
 
 locals {
   credentials = {
-    PGHOST      = "localhost",
-    PGPORT      = 5432,
-    PGUSER      = google_sql_user.main.name,
-    PGPASSWORD  = random_password.password.result,
-    PGINSTANCES = google_sql_database_instance.main.connection_name
+    HOST      = "localhost",
+    PORT      = 5432,
+    USER      = google_sql_user.main.name,
+    PASSWORD  = random_password.password.result,
+    INSTANCES = google_sql_database_instance.main.connection_name
   }
 }
 
 resource "google_secret_manager_secret" "db_secret" {
   for_each  = local.credentials
-  secret_id = "${var.init.app.id}-psql-credentials_${each.key}"
+  secret_id = "${var.secret_key_prefix}${each.key}"
   labels    = var.init.labels
   project   = var.init.app.project_id
   replication {
@@ -197,10 +197,10 @@ resource "google_secret_manager_secret" "db_secret" {
 }
 
 resource "google_secret_manager_secret_version" "db_secret_version_main_database_credentials" {
-  depends_on = [
-    google_sql_database_instance.main
-  ]
   for_each    = local.credentials
   secret      = google_secret_manager_secret.db_secret[each.key].id
   secret_data = each.value
+  depends_on = [
+    google_sql_database_instance.main
+  ]
 }

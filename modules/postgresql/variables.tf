@@ -225,3 +225,9 @@ variable "authorized_networks" {
   }))
   default = []
 }
+
+variable "secret_key_prefix" {
+  description = "Key prefix of secret. Ex. {secret_key_prefix: PSQL_} would give keys PSQL_USER, PSQL_PASSWORD and so on"
+  type        = string
+  default     = "PG"
+}

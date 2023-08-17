@@ -63,6 +63,6 @@ module "postgresql" {
 ### Integration Tests
 Run locally in test/integration folder
 ```
-go test -tags=integration -timeout 30m
+go test -v -tags=integration -timeout 30m
 ```
 
