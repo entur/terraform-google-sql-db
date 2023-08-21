@@ -25,6 +25,8 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [google_secret_manager_secret.db_secret](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret_version.db_secret_version_main_database_credentials](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
 | [google_sql_database.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database) | resource |
 | [google_sql_database_instance.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance) | resource |
 | [google_sql_user.additional_users](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
@@ -64,6 +66,7 @@ No modules.
 | <a name="input_query_insights_enabled"></a> [query\_insights\_enabled](#input\_query\_insights\_enabled) | Whether to enable query insights (7 day retention). | `bool` | `false` | no |
 | <a name="input_region"></a> [region](#input\_region) | The region the instance will sit in. | `string` | `"europe-west1"` | no |
 | <a name="input_retained_backups"></a> [retained\_backups](#input\_retained\_backups) | The number of backups to retain. Default is 30 for production, 7 for non-production. | `number` | `null` | no |
+| <a name="input_secret_key_prefix"></a> [secret\_key\_prefix](#input\_secret\_key\_prefix) | Key prefix of secret. Ex. {secret\_key\_prefix: PSQL\_} would give keys PSQL\_USER, PSQL\_PASSWORD and so on | `string` | `"PG"` | no |
 | <a name="input_transaction_log_retention_days"></a> [transaction\_log\_retention\_days](#input\_transaction\_log\_retention\_days) | How long transaction logs are stored (1-7). | `number` | `7` | no |
 | <a name="input_user_name"></a> [user\_name](#input\_user\_name) | The username of the default application user. Defaults to the app ID. | `string` | `null` | no |
 

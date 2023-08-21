@@ -20,3 +20,6 @@ tfplan
 
 # .auto.var files
 *.auto.tfvars
+
+# Pycharm
+.idea
