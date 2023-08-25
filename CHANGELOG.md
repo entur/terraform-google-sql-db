@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/entur/terraform-google-sql-db/compare/v1.5.0...v1.6.0) (2023-08-25)
+
+
+### Features
+
+* push database credentials to Secret Manager ([#40](https://github.com/entur/terraform-google-sql-db/issues/40)) ([8a01a3f](https://github.com/entur/terraform-google-sql-db/commit/8a01a3ff0f9f94f87374ed688887e7269f440265))
+
 ## [1.5.0](https://github.com/entur/terraform-google-sql-db/compare/v1.4.0...v1.5.0) (2023-08-08)
 
 
