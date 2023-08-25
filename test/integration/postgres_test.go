@@ -34,7 +34,6 @@ func TestCloudSql(t *testing.T) {
 		dbUser := "PGUSER"
 		sc := gcloud.Run(t, fmt.Sprintf("secrets describe %s --project %s", dbUser, cloudSqlT.GetStringOutput("project_id")))
 		assert.Contains(sc.Get("name").String(), dbUser, fmt.Sprintf("Expected secret not found in SM %s", dbUser))
-
 	})
 
 	cloudSqlT.Test()

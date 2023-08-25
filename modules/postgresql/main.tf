@@ -5,17 +5,18 @@ locals {
     non-prod = "db-f1-micro"
   }
 
-  user_name                   = var.user_name != null ? var.user_name : var.init.app.id
-  retained_backups            = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
-  deletion_protection         = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
-  availability_type           = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
-  machine_size                = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
-  offsite_backup_label        = var.disable_offsite_backup == true && var.init.is_production ? { offsite_enabled = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
-  labels                      = merge(var.init.labels, local.offsite_backup_label)
-  generation                  = format("%03d", var.generation)
-  disk_autoresize_limit       = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
-  additional_users            = { for key, value in var.additional_users : key => value if value.username != local.user_name }
-  additional_user_credentials = ! var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
+  user_name                      = var.user_name != null ? var.user_name : var.init.app.id
+  retained_backups               = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
+  deletion_protection            = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
+  availability_type              = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
+  machine_size                   = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
+  offsite_backup_label           = var.disable_offsite_backup == true && var.init.is_production ? { offsite_enabled = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
+  labels                         = merge(var.init.labels, local.offsite_backup_label)
+  generation                     = format("%03d", var.generation)
+  disk_autoresize_limit          = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
+  additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
+  additional_user_credentials    = ! var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
+  additional_sm_user_credentials = ! var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -180,10 +181,11 @@ locals {
     PASSWORD  = random_password.password.result,
     INSTANCES = google_sql_database_instance.main.connection_name
   }
+
 }
 
 resource "google_secret_manager_secret" "db_secret" {
-  for_each  = local.credentials
+  for_each  = var.add_main_secret_manager_credentials ? local.credentials : {}
   secret_id = "${var.secret_key_prefix}${each.key}"
   labels    = var.init.labels
   project   = var.init.app.project_id
@@ -197,9 +199,69 @@ resource "google_secret_manager_secret" "db_secret" {
 }
 
 resource "google_secret_manager_secret_version" "db_secret_version_main_database_credentials" {
-  for_each    = local.credentials
+  for_each    = var.add_main_secret_manager_credentials ? local.credentials : {}
   secret      = google_secret_manager_secret.db_secret[each.key].id
   secret_data = each.value
+  depends_on = [
+    google_sql_database_instance.main
+  ]
+}
+
+locals {
+  additionalcredentials = {
+    HOST      = "localhost",
+    PORT      = 5432,
+    USER      = "",
+    PASSWORD  = "",
+    INSTANCES = ""
+  }
+
+}
+
+locals {
+  users = flatten([
+    for user_key, data in local.additional_sm_user_credentials : [
+      for cred_key, cred in local.additionalcredentials : {
+        secret_id = "${user_key}_${var.secret_key_prefix}${cred_key}"
+        user_key  = user_key
+        cred_key  = cred_key
+        cred_data = cred
+      }
+    ]
+  ])
+}
+
+resource "google_secret_manager_secret" "db_secret_additional" {
+  for_each = {
+    for cred in local.users : "${cred.user_key}.${cred.cred_key}" => cred
+  }
+  secret_id = each.value.secret_id
+  labels    = var.init.labels
+  project   = var.init.app.project_id
+  replication {
+    user_managed {
+      replicas {
+        location = var.region
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret_version" "db_secret_version_additional_database_credentials" {
+  for_each = {
+    for cred in local.users : "${cred.user_key}.${cred.cred_key}" => cred
+  }
+  secret = each.value.secret_id
+  secret_data = (
+    each.value.cred_key == "USER" ?
+    google_sql_user.additional_users[each.value.user_key].name :
+    each.value.cred_key == "PASSWORD" ?
+    random_password.additional_users_password[each.value.user_key].result :
+    each.value.cred_key == "INSTANCES" ?
+    google_sql_database_instance.main.connection_name :
+    each.value.cred_data
+  )
   depends_on = [
     google_sql_database_instance.main
   ]

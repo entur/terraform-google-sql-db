@@ -212,7 +212,7 @@ variable "database_flags" {
 }
 
 variable "create_kubernetes_resources" {
-  description = "Optionally disables creating k8s resources -psql-connection and -psql-credentials. Can be used to avoic overwriting existing resources on database creation."
+  description = "Optionally disables creating k8s resources -psql-connection and -psql-credentials. Can be used to avoid overwriting existing resources on database creation."
   type        = bool
   default     = true
 }
@@ -230,4 +230,16 @@ variable "secret_key_prefix" {
   description = "Key prefix of secret. Ex. {secret_key_prefix: PSQL_} would give keys PSQL_USER, PSQL_PASSWORD and so on"
   type        = string
   default     = "PG"
+}
+
+variable "add_main_secret_manager_credentials" {
+  description = "Set to false to not store main database credentials in secret manager"
+  type        = bool
+  default     = true
+}
+
+variable "add_additional_secret_manager_credentials" {
+  description = "Set to false to not store additional database credentials in secret manager"
+  type        = bool
+  default     = true
 }
