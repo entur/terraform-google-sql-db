@@ -25,7 +25,5 @@ module "postgresql" {
   databases  = ["database-1"]
   additional_users = { user1 = { username = "user1", create_kubernetes_secret = false },
   user2 = { username = "user2", create_kubernetes_secret = false } }
-  add_additional_secret_manager_credentials = true
-  add_main_secret_manager_credentials       = false
 
 }

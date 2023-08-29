@@ -208,20 +208,9 @@ resource "google_secret_manager_secret_version" "db_secret_version_main_database
 }
 
 locals {
-  additionalcredentials = {
-    HOST      = "localhost",
-    PORT      = 5432,
-    USER      = "",
-    PASSWORD  = "",
-    INSTANCES = ""
-  }
-
-}
-
-locals {
   users = flatten([
     for user_key, data in local.additional_sm_user_credentials : [
-      for cred_key, cred in local.additionalcredentials : {
+      for cred_key, cred in local.credentials : {
         secret_id = "${user_key}_${var.secret_key_prefix}${cred_key}"
         user_key  = user_key
         cred_key  = cred_key
