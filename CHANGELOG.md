@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/entur/terraform-google-sql-db/compare/v1.6.0...v1.7.0) (2023-08-29)
+
+
+### Features
+
+* Add option to store credentials in secrets manager for additional users ([#43](https://github.com/entur/terraform-google-sql-db/issues/43)) ([a401b7c](https://github.com/entur/terraform-google-sql-db/commit/a401b7c1ed789fccba73180289a6895956f88d98))
+
 ## [1.6.0](https://github.com/entur/terraform-google-sql-db/compare/v1.5.0...v1.6.0) (2023-08-25)
 
 

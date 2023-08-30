@@ -9,7 +9,7 @@ module "init" {
 
 # ci: x-release-please-start-version
 module "postgresql" {
-  source    = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.6.0"
+  source    = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.0"
   init      = module.init
   databases = ["my-database"]
 
