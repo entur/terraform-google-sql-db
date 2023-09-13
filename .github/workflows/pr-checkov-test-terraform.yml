@@ -1,4 +1,4 @@
-name: checkov
+name: Checkov Scan
 
 on:
   push:
@@ -29,17 +29,18 @@ jobs:
           terraform_wrapper: false
       - name: Run Checkov action
         id: checkov
-        continue-on-error: true # alternative to use soft_fail in with clause
+        #continue-on-error: true # alternative to use soft_fail in with clause
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: modules/postgresql
           repo_root_for_plan_enrichment: examples/minimal_test
           log_level: INFO
+          soft_fail: true
           framework: terraform
           output_format: cli,sarif
           output_file_path: console,results.sarif
           download_external_modules: true
-          check: CKV_GCP_110,CKV_GCP_52 # optional: run only a specific check_id. can be comma separated list
+          #check: CKV_GCP_110,CKV_GCP_52  # optional: run only a specific check_id. can be comma separated list
           skip_check: CKV_GCP_56 # optional: skip a specific check_id. can be comma separated list
           
 
