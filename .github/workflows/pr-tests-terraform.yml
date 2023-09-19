@@ -13,4 +13,4 @@ jobs:
   tf-tests:
     uses: entur/gh-workflows/.github/workflows/pr-tests-terraform.yml@main
     with:
-      module_dirs: '["./modules/postgresql","./modules/postgresql-replica"]'
+      module_dirs: '["./modules/postgresql","./modules/postgresql-replica","examples/minimal_test"]'
