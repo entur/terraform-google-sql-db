@@ -242,7 +242,7 @@ resource "google_secret_manager_secret_version" "db_secret_version_additional_da
   for_each = {
     for cred in local.users : "${cred.user_key}.${cred.cred_key}" => cred
   }
-  secret = "${each.value.secret_id_prefix}/${each.value.secret_id}"
+  secret = google_secret_manager_secret.db_secret_additional[each.key].id
   secret_data = (
     each.value.cred_key == "USER" ?
     google_sql_user.additional_users[each.value.user_key].name :
@@ -253,6 +253,8 @@ resource "google_secret_manager_secret_version" "db_secret_version_additional_da
     each.value.cred_data
   )
   depends_on = [
-    google_sql_database_instance.main
+    google_sql_database_instance.main,
+    google_secret_manager_secret.db_secret_additional,
+    random_password.additional_users_password
   ]
 }
