@@ -211,7 +211,7 @@ locals {
   users = flatten([
     for user_key, data in local.additional_sm_user_credentials : [
       for cred_key, cred in local.credentials : {
-        id_prefix = "projects/${module.init.app.project_id}/secrets"
+        id_prefix = "projects/${var.init.app.project_id}/secrets"
         secret_id = "${upper(user_key)}_${var.secret_key_prefix}${cred_key}"
         user_key  = user_key
         cred_key  = cred_key
