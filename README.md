@@ -16,7 +16,7 @@ A PostgreSQL module that uses the [init module](https://github.com/entur/terrafo
 ### Example using the latest release
 ```
 module "postgresql" {
-  source = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.0"
+  source = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.1"
   ...
 }
 ```
