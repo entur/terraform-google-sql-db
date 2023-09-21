@@ -23,4 +23,8 @@ module "postgresql" {
   init       = module.init
   generation = random_integer.random_database_generation.result
   databases  = ["database-1", "database-2"]
+  additional_users = {
+    user1 = { username = "user1", create_kubernetes_secret = false },
+    user2 = { username = "user2", create_kubernetes_secret = false }
+  }
 }

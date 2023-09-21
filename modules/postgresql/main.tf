@@ -211,7 +211,8 @@ locals {
   users = flatten([
     for user_key, data in local.additional_sm_user_credentials : [
       for cred_key, cred in local.credentials : {
-        secret_id = "${user_key}_${var.secret_key_prefix}${cred_key}"
+        id_prefix = "projects/${module.init.app.project_id}/secrets"
+        secret_id = "${upper(user_key)}_${var.secret_key_prefix}${cred_key}"
         user_key  = user_key
         cred_key  = cred_key
         cred_data = cred
@@ -241,7 +242,7 @@ resource "google_secret_manager_secret_version" "db_secret_version_additional_da
   for_each = {
     for cred in local.users : "${cred.user_key}.${cred.cred_key}" => cred
   }
-  secret = each.value.secret_id
+  secret = "${each.value.secret_prefix}/${each.value.secret_id}"
   secret_data = (
     each.value.cred_key == "USER" ?
     google_sql_user.additional_users[each.value.user_key].name :

@@ -33,7 +33,11 @@ func TestCloudSql(t *testing.T) {
 		// test secret manager uploads with prefix
 		dbUser := "PGUSER"
 		sc := gcloud.Run(t, fmt.Sprintf("secrets describe %s --project %s", dbUser, cloudSqlT.GetStringOutput("project_id")))
-		assert.Contains(sc.Get("name").String(), dbUser, fmt.Sprintf("Expected secret not found in SM %s", dbUser))
+		assert.Contains(sc.Get("name").String(), dbUser, fmt.Sprintf("Expected secret in SM %s", dbUser))
+
+		dbUser := "USER1_PGUSER"
+		sc := gcloud.Run(t, fmt.Sprintf("secrets describe %s --project %s", dbUser, cloudSqlT.GetStringOutput("project_id")))
+		assert.Contains(sc.Get("name").String(), dbUser, fmt.Sprintf("Expected secret in SM %s", dbUser))
 	})
 
 	cloudSqlT.Test()
