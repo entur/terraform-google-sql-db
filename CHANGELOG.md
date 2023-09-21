@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/entur/terraform-google-sql-db/compare/v1.7.0...v1.7.1) (2023-09-21)
+
+
+### Bug Fixes
+
+* use id path for secret in version ([#50](https://github.com/entur/terraform-google-sql-db/issues/50)) ([db521b2](https://github.com/entur/terraform-google-sql-db/commit/db521b2330eede7e696b23af9982fd440f7fe107))
+
 ## [1.7.0](https://github.com/entur/terraform-google-sql-db/compare/v1.6.0...v1.7.0) (2023-08-29)
 
 
