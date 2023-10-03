@@ -26,7 +26,7 @@ variable "machine_size" {
   #   cpu    = number
   #   memory = number
   # })
-  type = map
+  type = map # map(any) forces map to be same type of the any type
   #default = {
   #tier   = "db-f1-micro"
   #cpu    = 1

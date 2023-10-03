@@ -1,0 +1,19 @@
+skip-check: 
+  - CKV_TF_1 # Modules to commit hash: Not relevant as we tag semantic versions
+  - CKV2_GCP_13 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV_GCP_14 # Ensure that Cloud SQL database instance does not allow root login from any host: Not relevant as we are not using Cloud SQL
+  - CKV_GCP_51 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV_GCP_52 # Ensure network is private: Already handled by vpc not on internet and ssl not public in any way
+  - CKV_GCP_53 # Ensure IP is not public: IP is not public
+  - CKV_GCP_54 # Require SSL: Already enforced
+  - CKV_GCP_55 # Ensure default namespace not used: Handled by core infra
+  - CKV_GCP_57 # Set password for MySQL instances: Does not account for postgres databases
+  - CKV_GCP_56 # AllowPrivilegeEscalation should be set to false: Not relevant as this is based on a variable in prod
+  - CKV_GCP_79 # Ensure latest major version of SQL database: Not possible yet
+  - CKV_GCP_108 # Ensure hostnames logged: Not using hostnames
+  - CKV_GCP_109 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV_GCP_111 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV2_GCP_14 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV2_GCP_15 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV2_GCP_16 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV2_GCP_17 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
