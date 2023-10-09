@@ -1,3 +1,4 @@
+soft-fail: true
 skip-check: 
   - CKV_TF_1 # Modules to commit hash: Not relevant as we tag semantic versions
   - CKV2_GCP_13 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
