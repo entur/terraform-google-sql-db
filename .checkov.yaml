@@ -1,3 +1,4 @@
+# soft-fail: true
 skip-check: 
   - CKV_TF_1 # Modules to commit hash: Not relevant as we tag semantic versions
   - CKV2_GCP_13 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
@@ -12,6 +13,7 @@ skip-check:
   - CKV_GCP_79 # Ensure latest major version of SQL database: Not possible yet
   - CKV_GCP_108 # Ensure hostnames logged: Not using hostnames
   - CKV_GCP_109 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV_GCP_110 # Ensure pgAudit is enabled for your GCP PostgreSQL database: Handled by jira CLOUD-1511
   - CKV_GCP_111 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
   - CKV2_GCP_14 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
   - CKV2_GCP_15 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
