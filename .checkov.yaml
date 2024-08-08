@@ -1,5 +1,5 @@
 # soft-fail: true
-skip-check: 
+skip-check:
   - CKV_TF_1 # Modules to commit hash: Not relevant as we tag semantic versions
   - CKV2_GCP_13 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
   - CKV_GCP_14 # Ensure that Cloud SQL database instance does not allow root login from any host: Not relevant as we are not using Cloud SQL
@@ -19,3 +19,4 @@ skip-check:
   - CKV2_GCP_15 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
   - CKV2_GCP_16 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
   - CKV2_GCP_17 # Ensure log_* is set to *: Logging is handled by googles query insight module which is better than postgres logging
+  - CKV_GCP_6 # GCP SQL Instances do not have SSL configured for incoming connections, checks for deprecated value.
