@@ -53,5 +53,10 @@ resource "google_sql_database_instance" "replica" {
       settings[0].maintenance_window,
     ]
   }
+  timeouts {
+    create = "60m"
+    update = "60m"
+    delete = "60m"
+  }
 }
 
