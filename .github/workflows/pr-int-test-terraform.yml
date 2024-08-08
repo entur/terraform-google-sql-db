@@ -3,10 +3,10 @@ name: Terraform Integration Tests
 on:
   pull_request:
     paths:
-      - 'modules/postgresql/**'
-      - 'test/**'
+      - "modules/postgresql/**"
+      - "test/**"
     branches:
-      - master
+      - main
     types:
       - opened
       - synchronize
@@ -16,8 +16,8 @@ on:
 jobs:
   terratest_bucket:
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
 
     name: Integration test Cloud SQL module
     runs-on: ubuntu-latest
@@ -30,13 +30,13 @@ jobs:
         with:
           terraform_version: 1.1.0
           terraform_wrapper: false
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
         with:
           workload_identity_provider: ${{ secrets.PROVIDER_NAME }}
           service_account: ${{ secrets.SA_EMAIL }}
-      - id: 'get-credentials'
-        uses: 'google-github-actions/get-gke-credentials@v2'
+      - id: "get-credentials"
+        uses: "google-github-actions/get-gke-credentials@v2"
         with:
           project_id: ${{ secrets.CLUSTER_PROJECT_ID }}
           cluster_name: ${{ secrets.CLUSTER_NAME }}
