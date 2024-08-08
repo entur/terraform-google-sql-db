@@ -43,7 +43,7 @@ resource "google_sql_database_instance" "main" {
       }
     }
     ip_configuration {
-      require_ssl = true
+      ssl_mode = "REQUIRED"
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         iterator = authnet
@@ -51,7 +51,6 @@ resource "google_sql_database_instance" "main" {
           name  = authnet.value.name
           value = authnet.value.value
         }
-
       }
     }
     maintenance_window {
