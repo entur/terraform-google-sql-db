@@ -10,6 +10,13 @@ on:
 
 jobs:
   validate-pr:
-    uses: entur/gh-workflows/.github/workflows/pr-validation.yml@main
-    secrets:
-      token: ${{ secrets.GITHUB_TOKEN }}
+    name: Ensure PR title complies with conventional commit conventions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+      - uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
