@@ -25,7 +25,7 @@ resource "google_sql_database_instance" "replica" {
     # maintenance_window is inherited from the master, adding to ignore_changes
     tier = local.machine_size
     ip_configuration {
-      require_ssl = var.master_instance.settings[0].ip_configuration[0].require_ssl
+      ssl_mode = var.master_instance.settings[0].ip_configuration[0].require_ssl ? "ENCRYPTED_ONLY" : "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
     }
     insights_config {
       query_insights_enabled  = var.master_instance.settings[0].insights_config[0].query_insights_enabled
@@ -52,6 +52,11 @@ resource "google_sql_database_instance" "replica" {
       settings[0].disk_autoresize_limit,
       settings[0].maintenance_window,
     ]
+  }
+  timeouts {
+    create = "60m"
+    update = "60m"
+    delete = "60m"
   }
 }
 

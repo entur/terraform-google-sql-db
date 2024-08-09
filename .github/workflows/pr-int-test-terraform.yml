@@ -3,10 +3,10 @@ name: Terraform Integration Tests
 on:
   pull_request:
     paths:
-      - 'modules/postgresql/**'
-      - 'test/**'
+      - "modules/postgresql/**"
+      - "test/**"
     branches:
-      - master
+      - main
     types:
       - opened
       - synchronize
@@ -16,11 +16,12 @@ on:
 jobs:
   terratest_bucket:
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
 
     name: Integration test Cloud SQL module
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -28,19 +29,18 @@ jobs:
           go-version: 1.19
       - uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.1.0
+          terraform_version: 1.8.5
           terraform_wrapper: false
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
+      - name: Authenticate with GCP
+        uses: entur/gha-meta/.github/actions/cloud-auth@v1
         with:
-          workload_identity_provider: ${{ secrets.PROVIDER_NAME }}
-          service_account: ${{ secrets.SA_EMAIL }}
-      - id: 'get-credentials'
-        uses: 'google-github-actions/get-gke-credentials@v2'
+          environment: dev
+          gcp_workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          gcp_service_account: ${{ vars.SERVICE_ACCOUNT }}
+      - name: Authenticate with GKE
+        uses: entur/gha-meta/.github/actions/k8s-auth@v1
         with:
-          project_id: ${{ secrets.CLUSTER_PROJECT_ID }}
-          cluster_name: ${{ secrets.CLUSTER_NAME }}
-          location: ${{ secrets.CLUSTER_LOCATION }}
+          environment: dev
       - name: Download Go Modules
         working-directory: test/integration
         run: go mod download

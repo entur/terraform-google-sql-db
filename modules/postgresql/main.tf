@@ -15,8 +15,8 @@ locals {
   generation                     = format("%03d", var.generation)
   disk_autoresize_limit          = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
   additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
-  additional_user_credentials    = ! var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
-  additional_sm_user_credentials = ! var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
+  additional_user_credentials    = !var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
+  additional_sm_user_credentials = !var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -43,7 +43,7 @@ resource "google_sql_database_instance" "main" {
       }
     }
     ip_configuration {
-      require_ssl = true
+      ssl_mode = "ENCRYPTED_ONLY"
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         iterator = authnet
@@ -51,7 +51,6 @@ resource "google_sql_database_instance" "main" {
           name  = authnet.value.name
           value = authnet.value.value
         }
-
       }
     }
     maintenance_window {
@@ -75,6 +74,12 @@ resource "google_sql_database_instance" "main" {
   }
 
   deletion_protection = local.deletion_protection
+
+  timeouts {
+    create = "60m"
+    update = "60m"
+    delete = "60m"
+  }
 }
 
 resource "google_sql_database" "main" {
