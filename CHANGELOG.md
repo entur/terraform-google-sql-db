@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.7.2](https://github.com/entur/terraform-google-sql-db/compare/v1.7.1...v1.7.2) (2024-08-09)
+
+
+### Bug Fixes
+
+* Increase timeouts on SQL instance creation ([#60](https://github.com/entur/terraform-google-sql-db/issues/60))
+* Migrate from gh-workflows to gha-meta - new cloud authentication workflows
+* dependabot.yml ([#62](https://github.com/entur/terraform-google-sql-db/issues/62)) ([d54fa16](https://github.com/entur/terraform-google-sql-db/commit/d54fa16e6264e986df769f8f4312066fc9b4ddc9))
+  
+
 ## [1.7.1](https://github.com/entur/terraform-google-sql-db/compare/v1.7.0...v1.7.1) (2023-09-21)
 
 
