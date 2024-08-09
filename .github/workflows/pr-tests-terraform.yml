@@ -10,8 +10,21 @@ on:
       - ready_for_review
 
 jobs:
-  tf-tests:
-    uses: entur/gh-workflows/.github/workflows/pr-tests-terraform.yml@main
+  tf-lint-postgresql:
+    name: Terraform Lint PostgreSQL
+    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
     with:
-      module_dirs: '["./modules/postgresql","./modules/postgresql-replica","examples/minimal_test"]'
-      tf_version: 0.13.2
+      directory: "./modules/postgresql"
+      version: 1.8.5
+  tf-lint-postgresql-replica:
+    name: Terraform Lint PostgreSQL Replica
+    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
+    with:
+      directory: "./modules/postgresql-replica"
+      version: 1.8.5
+  tf-lint-minimal_test:
+    name: Terraform Lint Examples
+    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
+    with:
+      directory: "./examples/minimal_test"
+      version: 1.8.5
