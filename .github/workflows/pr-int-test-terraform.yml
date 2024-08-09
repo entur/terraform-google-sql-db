@@ -45,7 +45,6 @@ jobs:
       - uses: entur/gha-meta/.github/actions/cloud-auth@v1
         with:
           environment: dev
-          cloud_provider: ${{ env.GHA_HELM_DEPLOY_CLOUD_PROVIDER }}
           gcp_workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           gcp_service_account: ${{ vars.SERVICE_ACCOUNT }}
 
