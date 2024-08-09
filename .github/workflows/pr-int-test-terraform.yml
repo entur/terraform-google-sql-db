@@ -31,11 +31,16 @@ jobs:
         with:
           terraform_version: 1.8.5
           terraform_wrapper: false
-      - uses: entur/gha-meta/.github/actions/cloud-auth@v1
+      - name: Authenticate with GCP
+        uses: entur/gha-meta/.github/actions/cloud-auth@v1
         with:
           environment: dev
           gcp_workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           gcp_service_account: ${{ vars.SERVICE_ACCOUNT }}
+      - name: Authenticate with GKE
+        uses: entur/gha-meta/.github/actions/k8s-auth@v1
+        with:
+          environment: dev
       - name: Download Go Modules
         working-directory: test/integration
         run: go mod download
