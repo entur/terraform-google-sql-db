@@ -21,6 +21,7 @@ jobs:
 
     name: Integration test Cloud SQL module
     runs-on: ubuntu-latest
+    environment: dev
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
@@ -30,24 +31,11 @@ jobs:
         with:
           terraform_version: 1.8.5
           terraform_wrapper: false
-      # - id: "auth"
-      #   uses: "google-github-actions/auth@v2"
-      #   with:
-      #     workload_identity_provider: ${{ secrets.PROVIDER_NAME }}
-      #     service_account: ${{ secrets.SA_EMAIL }}
-      # - id: "get-credentials"
-      #   uses: "google-github-actions/get-gke-credentials@v2"
-      #   with:
-      #     project_id: ${{ secrets.CLUSTER_PROJECT_ID }}
-      #     cluster_name: ${{ secrets.CLUSTER_NAME }}
-      #     location: ${{ secrets.CLUSTER_LOCATION }}
-
       - uses: entur/gha-meta/.github/actions/cloud-auth@v1
         with:
           environment: dev
           gcp_workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           gcp_service_account: ${{ vars.SERVICE_ACCOUNT }}
-
       - name: Download Go Modules
         working-directory: test/integration
         run: go mod download
