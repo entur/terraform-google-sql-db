@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.3](https://github.com/entur/terraform-google-sql-db/compare/v1.7.2...v1.7.3) (2024-09-16)
+
+
+### Bug Fixes
+
+* Replace references to deprecated property 'require_ssl' with 'ssl_mode' for postgres-replica module ([#66](https://github.com/entur/terraform-google-sql-db/issues/66)) ([751c4fa](https://github.com/entur/terraform-google-sql-db/commit/751c4fa2439324d9dac157a4952ae74c4e0f3ddc))
+
 ## [1.7.2](https://github.com/entur/terraform-google-sql-db/compare/v1.7.1...v1.7.2) (2024-08-09)
 
 
