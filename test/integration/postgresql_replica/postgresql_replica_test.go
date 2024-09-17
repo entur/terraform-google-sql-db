@@ -18,7 +18,7 @@ func TestPostgreSqlReplicaModule(t *testing.T) {
 		tft.WithTFDir(exampleDir),
 	)
 
-	pSql.DefineVerify(func(assert *assert.Assertions) {
+	cloudSqlT.DefineVerify(func(assert *assert.Assertions) {
 		// pSql.DefaultVerify(assert)
 
 		instaceNames := []string{pSql.GetStringOutput("name")}
@@ -49,12 +49,12 @@ func TestPostgreSqlReplicaModule(t *testing.T) {
 				// replica specific validation
 			} else {
 				// assert general database settings
-				//assert.Equal("ZONAL", op.Get("settings.availabilityType").String(), "Expected ZONAL availabilityType")
+				assert.Equal("ZONAL", op.Get("settings.availabilityType").String(), "Expected ZONAL availabilityType")
 				assert.Equal(op.Get("settings.ipConfiguration.sslMode").String(), "ENCRYPTED_ONLY")
 			}
 		}
 
 	})
 
-	pSql.Test()
+	cloudSqlT.Test()
 }
