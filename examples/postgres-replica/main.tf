@@ -1,4 +1,4 @@
-resource "random_integer" "random_database_generation" {
+  resource "random_integer" "random_database_generation" {
   # This resource block is used to randomize instance names for testing;
   # do not include this in a live configuration.
   min = 1
@@ -40,7 +40,7 @@ module "postgres-replica" {
   init   = module.init
 
   replica_number  = 1
-  master_instance = module.postgres[0].instance
+  master_instance = module.postgresql[0].instance
 
   availability_type = "ZONAL"
 }
