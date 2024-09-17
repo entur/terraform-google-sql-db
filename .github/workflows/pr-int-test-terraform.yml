@@ -45,5 +45,4 @@ jobs:
         working-directory: test/integration
         run: go mod download
       - name: Run Go Integration Tests
-        working-directory: test/integration
-        run: go test -tags=integration -timeout 30m
+        run: go test -tags=integration ./test/integration/... -timeout 30m
