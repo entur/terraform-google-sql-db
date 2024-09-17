@@ -1,9 +1,3 @@
-locals {
-  read_replica_ip_configuration = {    
-    ssl_mode = "ENCRYPTED_ONLY"
-  }
-}
-
 resource "random_integer" "random_database_generation" {
   # This resource block is used to randomize instance names for testing;
   # do not include this in a live configuration.
@@ -29,7 +23,6 @@ module "postgresql" {
   init       = module.init
   generation = random_integer.random_database_generation.result
   availability_type = "REGIONAL"
-  ip_configuration  = local.read_replica_ip_configuration
   databases  = ["database-1", "database-2"]
   machine_size = {
     cpu    = 1
