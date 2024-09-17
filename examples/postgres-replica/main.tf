@@ -48,7 +48,6 @@ module "postgres-replica" {
 
   replica_number  = 1
   master_instance = module.postgres[0].instance
-  ip_configuration  = local.read_replica_ip_configuration
 
   availability_type = "ZONAL"
 }
