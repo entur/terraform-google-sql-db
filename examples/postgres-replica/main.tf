@@ -29,7 +29,7 @@ module "postgresql" {
     memory = 3840
   }
   additional_users = {
-    user1 = { username = "user1", crea  te_kubernetes_secret = false },
+    user1 = { username = "user1", create_kubernetes_secret = false },
     user2 = { username = "user2", create_kubernetes_secret = false }
   }
 }
