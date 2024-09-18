@@ -36,8 +36,12 @@ module "postgresql" {
 
 
 module "postgres-replica" {  
-  source = "github.com/entur/terraform-google-sql-db//modules/postgresql-replica?ref=v1.7.2"
-  init   = module.init
+  # This is for local reference only; if you're using this module as a published
+  # module from GitHub, the 'source' parameter must refer to it's public location.
+  # See README.md for instructions.
+  # source     = "github.com/entur/terraform-google-sql-db//modules/postgresql-replica?ref=vVERSION"
+  source       = "../../modules/postgresql-replica"
+  init         = module.init  
 
   replica_number  = 1
   master_instance = module.postgresql[0].instance
