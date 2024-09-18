@@ -29,7 +29,7 @@ module "postgresql" {
     memory = 3840
   }
   additional_users = {
-    user1 = { username = "user1", create_kubernetes_secret = false },
+    user1 = { username = "user1", crea  te_kubernetes_secret = false },
     user2 = { username = "user2", create_kubernetes_secret = false }
   }
 }
@@ -42,9 +42,7 @@ module "postgres-replica" {
   # source     = "github.com/entur/terraform-google-sql-db//modules/postgresql-replica?ref=vVERSION"
   source       = "../../modules/postgresql-replica"
   init         = module.init
-
   replica_number  = 1
   master_instance = module.postgresql.instance
-
   availability_type = "ZONAL"
 }

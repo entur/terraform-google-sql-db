@@ -25,7 +25,7 @@ resource "google_sql_database_instance" "replica" {
     # maintenance_window is inherited from the master, adding to ignore_changes
     tier = local.machine_size
     ip_configuration {
-      ssl_mode = var.master_instance.settings[0].ip_configuration[0].ssl_mode ? "ENCRYPTED_ONLY" : "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
+      ssl_mode = var.master_instance.settings[0].ip_configuration[0].ssl_mode
     }
     insights_config {
       query_insights_enabled  = var.master_instance.settings[0].insights_config[0].query_insights_enabled
