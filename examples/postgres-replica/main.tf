@@ -41,10 +41,10 @@ module "postgres-replica" {
   # See README.md for instructions.
   # source     = "github.com/entur/terraform-google-sql-db//modules/postgresql-replica?ref=vVERSION"
   source       = "../../modules/postgresql-replica"
-  init         = module.init  
+  init         = module.init
 
   replica_number  = 1
-  master_instance = module.postgresql[0].instance
+  master_instance = module.postgresql.instance
 
   availability_type = "ZONAL"
 }
