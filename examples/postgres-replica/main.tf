@@ -24,6 +24,7 @@ module "postgresql" {
   generation = random_integer.random_database_generation.result
   availability_type = "REGIONAL"
   databases  = ["database-1", "database-2"]
+  deletion_protection = false
 
   machine_size = {
     cpu    = 1
@@ -33,10 +34,6 @@ module "postgresql" {
   additional_users = {
     user1 = { username = "user1", create_kubernetes_secret = false },
     user2 = { username = "user2", create_kubernetes_secret = false }
-  }
-
-  settings {
-    deletion_protection_enabled = false
   }
 }
 
