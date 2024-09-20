@@ -20,7 +20,7 @@ resource "google_sql_database_instance" "replica" {
   settings {
     user_labels                 = local.labels
     availability_type           = var.availability_type
-    deletion_protection_enabled = var.master_instance.settings[0].deletion_protection_enabled
+    deletion_protection         = var.master_instance.settings[0].deletion_protection_enabled
     # disk_size properties is inherited from the master, adding to ignore_changes
     # maintenance_window is inherited from the master, adding to ignore_changes
     tier = local.machine_size
