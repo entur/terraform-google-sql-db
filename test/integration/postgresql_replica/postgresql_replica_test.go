@@ -21,7 +21,7 @@ func TestPostgreSqlReplicaModule(t *testing.T) {
 	cloudSqlT.DefineVerify(func(assert *assert.Assertions) {
 		// pSql.DefaultVerify(assert)
 
-		instanceNames := []string{cloudSqlT.GetStringOutput("name")}
+		instanceNames := []string{cloudSqlT.GetStringOutput("instance_name")}
 		projectId := cloudSqlT.GetStringOutput("project_id")
 		op := gcloud.Runf(t, "sql instances describe %s --project %s", instanceNames[0], projectId)
 

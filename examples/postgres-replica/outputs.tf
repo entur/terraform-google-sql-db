@@ -1,8 +1,8 @@
-/*output "instance_name" {
+output "instance_name" {
   description = "The database instance name."
   value       = module.postgresql.instance.name
   sensitive   = true
-}*/
+}
 
 output "project_id" {
   description = "Project ID"
