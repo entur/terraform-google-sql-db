@@ -41,7 +41,7 @@ func TestPostgreSqlReplicaModule(t *testing.T) {
 			assert.Equal(int64(0), op.Get("settings.maintenanceWindow.hour").Int(), "Expected 0 maintenanceWindow.hour")
 
 			// master specific validation
-			if instance == cloudSqlT.GetStringOutput("name") {
+			if instance == cloudSqlT.GetStringOutput("instance_name") {
 				// assert general database settings
 				assert.Equal("REGIONAL", op.Get("settings.availabilityType").String(), "Expected REGIONAL availabilityType")
 				assert.Equal(op.Get("settings.ipConfiguration.sslMode").String(), "ENCRYPTED_ONLY")
