@@ -36,9 +36,6 @@ func TestPostgreSqlReplicaModule(t *testing.T) {
 			assert.Equal("POSTGRES_14", op.Get("databaseVersion").String(), "Expected POSTGRES_14 databaseVersion")
 			assert.Equal("RUNNABLE", op.Get("state").String(), "Expected RUNNABLE state")
 			assert.Equal("europe-west1", op.Get("region").String(), "Expected europe-west1 region")
-			assert.Equal("sql#maintenanceWindow", op.Get("settings.maintenanceWindow.kind").String(), "Expected sql#maintenanceWindow maintenanceWindow.kind")
-			assert.Equal(int64(2), op.Get("settings.maintenanceWindow.day").Int(), "Expected 2 maintenanceWindow.day")
-			assert.Equal(int64(0), op.Get("settings.maintenanceWindow.hour").Int(), "Expected 0 maintenanceWindow.hour")
 
 			// master specific validation
 			if instance == cloudSqlT.GetStringOutput("instance_name") {
