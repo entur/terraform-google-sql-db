@@ -26,5 +26,5 @@ jobs:
     name: Terraform Lint Examples
     uses: entur/gha-terraform/.github/workflows/lint.yml@v1
     with:
-      directory: "./examples/minimal_test"
+      directory: "./test/fixtures/minimal_test"
       version: 1.8.5
