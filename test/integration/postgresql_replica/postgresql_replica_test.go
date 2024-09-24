@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const exampleDir = "../../../examples/postgres-replica"
+const exampleDir = "../../../fixtures/postgres-replica"
 
 func TestPostgreSqlReplicaModule(t *testing.T) {
 	cloudSqlT := tft.NewTFBlueprintTest(t,
@@ -35,7 +35,7 @@ func TestPostgreSqlReplicaModule(t *testing.T) {
 			// assert general database settings
 			assert.Equal("POSTGRES_14", op.Get("databaseVersion").String(), "Expected POSTGRES_14 databaseVersion")
 			assert.Equal("RUNNABLE", op.Get("state").String(), "Expected RUNNABLE state")
-			assert.Equal("europe-west1", op.Get("region").String(), "Expected europe-west1 region")
+			assert.Equal("europe-west1", op.Get("region").String(), "Expected europe-west1 region")		
 
 			// master specific validation
 			if instance == cloudSqlT.GetStringOutput("instance_name") {
