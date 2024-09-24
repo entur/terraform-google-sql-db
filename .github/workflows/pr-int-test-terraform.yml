@@ -44,6 +44,6 @@ jobs:
       - name: Download Go Modules
         working-directory: test/integration
         run: go mod download
-      - name: Run Go Integration Tests
+      - name: Run recursive Go integration tests
         working-directory: test/integration
         run: go test -tags=integration ./... -timeout 30m
