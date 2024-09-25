@@ -19,7 +19,7 @@ module "postgresql" {
   # module from GitHub, the 'source' parameter must refer to it's public location.
   # See README.md for instructions.
   # source     = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=vVERSION"
-  source     = "../../modules/postgresql"
+  source     = "../../../modules/postgresql"
   init       = module.init
   generation = random_integer.random_database_generation.result
   availability_type = "REGIONAL"
@@ -38,7 +38,7 @@ module "postgres-replica" {
   # module from GitHub, the 'source' parameter must refer to it's public location.
   # See README.md for instructions.
   # source     = "github.com/entur/terraform-google-sql-db//modules/postgresql-replica?ref=vVERSION"
-  source       = "../../modules/postgresql-replica"
+  source       = "../../../modules/postgresql-replica"
   init         = module.init
   replica_number  = 1
   master_instance = module.postgresql.instance
