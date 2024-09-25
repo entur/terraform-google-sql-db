@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const exampleDir = "../../../fixtures/postgres-replica"
+const exampleDir = "../fixtures/postgres-replica"
 
 func TestPostgreSqlReplicaModule(t *testing.T) {
 	cloudSqlT := tft.NewTFBlueprintTest(t,

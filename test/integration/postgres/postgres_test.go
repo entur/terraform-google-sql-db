@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const exampleDir = "../../fixtures/minimal_test"
+const exampleDir = "../fixtures/minimal_test"
 
 func TestCloudSql(t *testing.T) {
 
