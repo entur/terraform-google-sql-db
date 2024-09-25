@@ -1,3 +1,5 @@
+# This minimal example demonstrates how to create a PostgreSQL instance.
+
 module "init" {
   # This is an example only; if you're adding this block to a live configuration,
   # make sure to use the latest release of the init module, found here:
@@ -12,10 +14,5 @@ module "postgresql" {
   source    = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.1"
   init      = module.init
   databases = ["my-database"]
-
-  # machine_size = {
-  #   cpu    = 1
-  #   memory = 3840
-  # }
 }
 # ci: x-release-please-end
