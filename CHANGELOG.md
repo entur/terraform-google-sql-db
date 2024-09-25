@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.4](https://github.com/entur/terraform-google-sql-db/compare/v1.7.3...v1.7.4) (2024-09-25)
+
+
+### Bug Fixes
+
+* Module postgresql-replica treats ssl_mode as a boolean instead of a string ([#69](https://github.com/entur/terraform-google-sql-db/issues/69)) ([effb8eb](https://github.com/entur/terraform-google-sql-db/commit/effb8ebf3caa89052a53a76b7843f8e387d6d29e))
+
 ## [1.7.3](https://github.com/entur/terraform-google-sql-db/compare/v1.7.2...v1.7.3) (2024-09-16)
 
 
