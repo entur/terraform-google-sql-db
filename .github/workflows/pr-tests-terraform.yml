@@ -22,9 +22,3 @@ jobs:
     with:
       directory: "./modules/postgresql-replica"
       version: 1.8.5
-  tf-lint-minimal_test:
-    name: Terraform Lint Examples
-    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
-    with:
-      directory: "./examples/minimal_test"
-      version: 1.8.5
