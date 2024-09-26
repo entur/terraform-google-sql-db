@@ -11,7 +11,7 @@ module "init" {
 
 # ci: x-release-please-start-version
 module "postgresql" {
-  source            = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.1"
+  source            = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.4"
   init              = module.init
   availability_type = "REGIONAL"
   databases         = ["my-database"]
@@ -20,7 +20,7 @@ module "postgresql" {
 
 # ci: x-release-please-start-version
 module "postgres-replica" {
-  source          = "github.com/entur/terraform-google-sql-db//modules/postgresql-replica?ref=v1.7.1"
+  source          = "github.com/entur/terraform-google-sql-db//modules/postgresql-replica?ref=v1.7.4"
   init            = module.init
   master_instance = module.postgresql.instance
 }
