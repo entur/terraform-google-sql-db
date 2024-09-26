@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.5](https://github.com/entur/terraform-google-sql-db/compare/v1.7.4...v1.7.5) (2024-09-26)
+
+
+### Bug Fixes
+
+* **chore:** update google provider ([b062070](https://github.com/entur/terraform-google-sql-db/commit/b06207080d95aa80cf7c7c448d78f8c1bba170d2))
+
 ## [1.7.4](https://github.com/entur/terraform-google-sql-db/compare/v1.7.3...v1.7.4) (2024-09-25)
 
 
