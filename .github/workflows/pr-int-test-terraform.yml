@@ -41,9 +41,6 @@ jobs:
         uses: entur/gha-meta/.github/actions/k8s-auth@v1
         with:
           environment: dev
-      - name: Download Go Modules
-        working-directory: test/integration
-        run: go mod download
       - name: Run recursive Go integration tests
         working-directory: test/integration
         run: go test -tags=integration ./... -timeout 30m
