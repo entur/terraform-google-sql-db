@@ -1,6 +1,6 @@
 module github.com/entur/terraform-google-sql-db
 
-go 1.20
+go 1.22
 
 require (
 	github.com/GoogleCloudPlatform/cloud-foundation-toolkit/infra/blueprint-test v0.17.0
