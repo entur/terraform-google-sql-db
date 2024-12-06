@@ -13,14 +13,16 @@ A PostgreSQL module that uses the [init module](https://github.com/entur/terrafo
 ## Getting started
 
 <!-- ci: x-release-please-start-version -->
+
 ### Example using the latest release
 
 ```terraform
 module "postgresql" {
-  source = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.1"
+  source = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.4"
   ...
 }
 ```
+
 <!-- ci: x-release-please-end -->
 
 See the `README.md` under each module's subfolder for a list of supported inputs and outputs. For examples showing how they're implemented, check the [examples](examples) subfolder.
@@ -35,10 +37,10 @@ Dependency automation tools such as Renovate Bot will be able to discover new re
 
 If a desired machine size and/or availability type is not explicitly set, defaults will be used:
 
-| Environment    | Type           | CPU  | Memory  | Highly available |
-|----------------|----------------|------|---------|------------------|
-| non-production | Shared vCPU    | <1   | 600 MB  | No               |
-| production     | Dedicated vCPU | 1    | 3840 MB | Yes              |
+| Environment    | Type           | CPU | Memory  | Highly available |
+| -------------- | -------------- | --- | ------- | ---------------- |
+| non-production | Shared vCPU    | <1  | 600 MB  | No               |
+| production     | Dedicated vCPU | 1   | 3840 MB | Yes              |
 
 ### Sizing
 
@@ -68,7 +70,10 @@ module "postgresql" {
 ### Integration Tests
 
 Run local integration tests in test/integration folder.
-*NB* Only Team-Plattform has rights to do this locally.
+
+> [!IMPORTANT]  
+> Only Team-Plattform has rights to do this locally.
+> Contributors can create a PR which will run the tests as well.
 
 Make sure you are connected to the dev kubernetes cluster in GKE (kub-ent-dev-001)
 
