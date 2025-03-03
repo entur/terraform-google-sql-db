@@ -1,82 +1,46 @@
+---
 version: 2
-registries:
-  jfrog-artifactory:
-    type: npm-registry
-    url: "https://entur2.jfrog.io/entur2"
-    token: ${{secrets.ARTIFACTORY_AUTH_TOKEN}}
 updates:
 - package-ecosystem: "gomod"
-  directory: "/test/integration"
+  directories:
+    - /test/integration
   groups:
     minor-and-patch:
       applies-to: version-updates
       update-types:
       - "minor"
       - "patch"
-    major-updates:
-      applies-to: version-updates
-      update-types:
-      - "major"
   schedule:
     interval: "weekly"
+    time: "09:00"
+    timezone: "Europe/Oslo"
+    day: "monday"
   open-pull-requests-limit: 2
-- package-ecosystem: "terraform"
-  directory: "/examples/minimal"
+- package-ecosystem: "github-actions"
+  directories:
+    - /
   groups:
     minor-and-patch:
       applies-to: version-updates
       update-types:
       - "minor"
       - "patch"
-    major-updates:
-      applies-to: version-updates
-      update-types:
-      - "major"
   schedule:
     interval: "weekly"
+    time: "09:00"
+    timezone: "Europe/Oslo"
+    day: "monday"
   open-pull-requests-limit: 2
-- package-ecosystem: "terraform"
-  directory: "/examples/minimal_test"
-  groups:
-    minor-and-patch:
-      applies-to: version-updates
-      update-types:
-      - "minor"
-      - "patch"
-    major-updates:
-      applies-to: version-updates
-      update-types:
-      - "major"
+- package-ecosystem: terraform
+  directories:
+  - /examples/minimal
+  - /examples/minimal_test
+  - /examples/postgres-replica
+  - /modules/postgresql
+  - /modules/postgresql-replica
+  - /test/fixtures/postgres-replica
   schedule:
-    interval: "weekly"
-  open-pull-requests-limit: 2
-- package-ecosystem: "terraform"
-  directory: "/modules/postgresql"
-  groups:
-    minor-and-patch:
-      applies-to: version-updates
-      update-types:
-      - "minor"
-      - "patch"
-    major-updates:
-      applies-to: version-updates
-      update-types:
-      - "major"
-  schedule:
-    interval: "weekly"
-  open-pull-requests-limit: 2
-- package-ecosystem: "terraform"
-  directory: "/modules/postgresql-replica"
-  groups:
-    minor-and-patch:
-      applies-to: version-updates
-      update-types:
-      - "minor"
-      - "patch"
-    major-updates:
-      applies-to: version-updates
-      update-types:
-      - "major"
-  schedule:
-    interval: "weekly"
-  open-pull-requests-limit: 2
+    interval: "daily"
+    time: "09:00"
+    timezone: "Europe/Oslo"
+  open-pull-requests-limit: 0  # Security-updates only
