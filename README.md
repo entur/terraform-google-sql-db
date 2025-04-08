@@ -42,6 +42,14 @@ If a desired machine size and/or availability type is not explicitly set, defaul
 | non-production | Shared vCPU    | <1  | 600 MB  | No               |
 | production     | Dedicated vCPU | 1   | 3840 MB | Yes              |
 
+
+### Edition
+
+We highly recommend using the Enterprise Plus edition of SQL instances in production environments and the Enterprise edition for non-production environments.
+
+Ensure you select the appropriate tier for your use case. For more details about instance editions, refer to the [official documentation](https://cloud.google.com/sql/docs/postgres/instance-settings).
+
+
 ### Sizing
 
 To specify the size of a database instance, supply the `cpu` and `memory` attributes in `var.machine_size` (recommended):
