@@ -68,6 +68,7 @@ variable "database_edition" {
   type        = string
   default     = "EDITION_UNSPECIFIED"
 
+  # Validation is based off of https://cloud.google.com/sql/docs/mysql/admin-api/rest/v1/instances#edition
   validation {
     condition     = contains(["EDITION_UNSPECIFIED", "ENTERPRISE", "ENTERPRISE_PLUS"], var.database_edition)
     error_message = "Must be a valid edition"
