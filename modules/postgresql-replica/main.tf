@@ -23,7 +23,8 @@ resource "google_sql_database_instance" "replica" {
     deletion_protection_enabled = var.master_instance.settings[0].deletion_protection_enabled
     # disk_size properties is inherited from the master, adding to ignore_changes
     # maintenance_window is inherited from the master, adding to ignore_changes
-    tier = local.machine_size
+    tier    = local.machine_size
+    edition = var.master_instance.settings[0].edition
     ip_configuration {
       ssl_mode = var.master_instance.settings[0].ip_configuration[0].ssl_mode
     }

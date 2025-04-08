@@ -63,6 +63,17 @@ variable "databases" {
   type        = list(string)
 }
 
+variable "database_edition" {
+  description = "The GCP edition of the instance. Defaults to unspecified (see https://cloud.google.com/sql/docs/postgres/editions-intro)"
+  type        = string
+  default     = "EDITION_UNSPECIFIED"
+
+  validation {
+    condition     = contains(["EDITION_UNSPECIFIED", "ENTERPRISE", "ENTERPRISE_PLUS"], var.database_edition)
+    error_message = "Must be a valid edition"
+  }
+}
+
 variable "database_version" {
   description = "The PostgreSQL version (see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version)."
   type        = string
