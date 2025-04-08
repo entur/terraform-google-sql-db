@@ -71,3 +71,9 @@ variable "database_flags" {
   }))
   default = {}
 }
+
+variable "instance_edition" {
+  type        = string
+  default     = null
+  description = "Optional override for the replica SQL instance edition."
+}

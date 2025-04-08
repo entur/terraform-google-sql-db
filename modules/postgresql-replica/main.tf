@@ -1,7 +1,8 @@
 locals {
-  machine_size   = var.machine_size_override != null ? try(var.machine_size_override.tier, "db-custom-${var.machine_size_override.cpu}-${var.machine_size_override.memory}") : var.master_instance.settings[0].tier
-  labels         = merge(var.master_instance.settings[0].user_labels, { offsite_enabled = false })
-  replica_number = format("%03d", var.replica_number)
+  machine_size     = var.machine_size_override != null ? try(var.machine_size_override.tier, "db-custom-${var.machine_size_override.cpu}-${var.machine_size_override.memory}") : var.master_instance.settings[0].tier
+  edition          = var.instance_edition != null ? var.instance_edition : var.master_instance.settings[0].edition
+  labels           = merge(var.master_instance.settings[0].user_labels, { offsite_enabled = false })
+  replica_number   = format("%03d", var.replica_number)
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -21,9 +22,9 @@ resource "google_sql_database_instance" "replica" {
     user_labels                 = local.labels
     availability_type           = var.availability_type
     deletion_protection_enabled = var.master_instance.settings[0].deletion_protection_enabled
-    # disk_size properties is inherited from the master, adding to ignore_changes
-    # maintenance_window is inherited from the master, adding to ignore_changes
-    tier = local.machine_size
+    
+    tier                        = local.machine_size
+    edition                     = local.edition
     ip_configuration {
       ssl_mode = var.master_instance.settings[0].ip_configuration[0].ssl_mode
     }

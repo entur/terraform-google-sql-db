@@ -4,6 +4,10 @@ locals {
     prod     = "db-custom-1-3840"
     non-prod = "db-f1-micro"
   }
+  default_editions = {
+     prod     = "ENTERPRISE_PLUS"
+     non-prod = "ENTERPRISE"
+   }
 
   user_name                      = var.user_name != null ? var.user_name : var.init.app.id
   retained_backups               = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
@@ -17,6 +21,7 @@ locals {
   additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
   additional_user_credentials    = !var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
   additional_sm_user_credentials = !var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
+  edition                        = var.instance_edition != null ? var.instance_edition : var.init.is_production ? local.default_editions.prod : local.default_editions.non-prod
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -34,6 +39,7 @@ resource "google_sql_database_instance" "main" {
     disk_autoresize             = var.disk_autoresize
     disk_autoresize_limit       = local.disk_autoresize_limit
     tier                        = local.machine_size
+edition                     = local.resolved_edition
     backup_configuration {
       enabled                        = var.enable_backup
       point_in_time_recovery_enabled = var.point_in_time_recovery_enabled
