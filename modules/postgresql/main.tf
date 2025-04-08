@@ -19,8 +19,8 @@ locals {
   generation                     = format("%03d", var.generation)
   disk_autoresize_limit          = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
   additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
-  additional_user_credentials    = ! var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
-  additional_sm_user_credentials = ! var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
+  additional_user_credentials    = !var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
+  additional_sm_user_credentials = !var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
   edition                        = var.instance_edition != null ? var.instance_edition : var.init.is_production ? local.default_editions.prod : local.default_editions.non-prod
 }
 
