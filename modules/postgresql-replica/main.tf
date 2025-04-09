@@ -1,6 +1,5 @@
 locals {
   machine_size   = var.machine_size_override != null ? try(var.machine_size_override.tier, "db-custom-${var.machine_size_override.cpu}-${var.machine_size_override.memory}") : var.master_instance.settings[0].tier
-  edition        = var.instance_edition != null ? var.instance_edition : var.master_instance.settings[0].edition
   labels         = merge(var.master_instance.settings[0].user_labels, { offsite_enabled = false })
   replica_number = format("%03d", var.replica_number)
 }
@@ -25,7 +24,7 @@ resource "google_sql_database_instance" "replica" {
     # disk_size properties is inherited from the master, adding to ignore_changes
     # maintenance_window is inherited from the master, adding to ignore_changes
     tier    = local.machine_size
-    edition = local.edition
+    edition = var.instance_edition
     ip_configuration {
       ssl_mode = var.master_instance.settings[0].ip_configuration[0].ssl_mode
     }

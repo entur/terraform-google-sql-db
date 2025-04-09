@@ -246,6 +246,6 @@ variable "add_additional_secret_manager_credentials" {
 
 variable "instance_edition" {
   type        = string
-  default     = null
+  default     = "ENTERPRISE"
   description = "Default SQL instance edition"
 }

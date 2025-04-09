@@ -74,6 +74,6 @@ variable "database_flags" {
 
 variable "instance_edition" {
   type        = string
-  default     = null
+  default     = "ENTERPRISE"
   description = "Optional override for the replica SQL instance edition."
 }

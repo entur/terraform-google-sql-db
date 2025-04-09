@@ -44,8 +44,7 @@ If a desired machine size and/or availability type is not explicitly set, defaul
 
 
 ### Edition
-
-We highly recommend using the Enterprise Plus edition of SQL instances in production environments and the Enterprise edition for non-production environments.
+Selecting the **Enterprise Plus** edition will cause a database restart, leading to downtime. Additionally, it significantly increases costs. Carefully evaluate your requirements before choosing this edition.
 
 Ensure you select the appropriate tier for your use case. For more details about instance editions, refer to the [official documentation](https://cloud.google.com/sql/docs/postgres/instance-settings).
 
