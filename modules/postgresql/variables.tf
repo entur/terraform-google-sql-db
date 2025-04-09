@@ -247,5 +247,5 @@ variable "add_additional_secret_manager_credentials" {
 variable "instance_edition" {
   type        = string
   default     = "ENTERPRISE"
-  description = "Default SQL instance edition"
+  description = "Override the default instance edition (`ENTERPRISE` or `ENTERPRISE_PLUS`)."
 }
