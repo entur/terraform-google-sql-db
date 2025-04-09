@@ -243,3 +243,9 @@ variable "add_additional_secret_manager_credentials" {
   type        = bool
   default     = true
 }
+
+variable "instance_edition" {
+  type        = string
+  default     = "ENTERPRISE"
+  description = "Override the default instance edition (`ENTERPRISE` or `ENTERPRISE_PLUS`)."
+}
