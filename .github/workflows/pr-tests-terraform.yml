@@ -12,13 +12,44 @@ on:
 jobs:
   tf-lint-postgresql:
     name: Terraform Lint PostgreSQL
-    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
-    with:
-      directory: "./modules/postgresql"
-      version: 1.8.5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Terraform Lint for PostgreSQL
+        run: |
+          cd ./modules/postgresql
+          terraform fmt -check
+          terraform validate
+
   tf-lint-postgresql-replica:
     name: Terraform Lint PostgreSQL Replica
-    uses: entur/gha-terraform/.github/workflows/lint.yml@v1
-    with:
-      directory: "./modules/postgresql-replica"
-      version: 1.8.5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Terraform Lint for PostgreSQL Replica
+        run: |
+          cd ./modules/postgresql-replica
+          terraform fmt -check
+          terraform validate
+
+  tf-docs:
+    name: Terraform documentation
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir:
+          - test/fixtures/postgres-replica
+          - test/fixtures/postgres
+
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Render terraform docs inside the README.md and push changes back to PR branch
+        uses: terraform-docs/gh-actions@e47bfa196e79fa50987ef391be236d9d97b0c786 # v1.2.0
+        with:
+          working-dir: ${{ matrix.dir }}
+          output-file: README.md
+          output-method: inject
+          git-push: "true"
