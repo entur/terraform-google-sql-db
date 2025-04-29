@@ -35,6 +35,7 @@ resource "google_sql_database_instance" "main" {
     disk_autoresize_limit       = local.disk_autoresize_limit
     tier                        = local.machine_size
     edition                     = var.instance_edition
+    retain_backups_on_delete = var.retain_backups_on_delete
     backup_configuration {
       enabled                        = var.enable_backup
       point_in_time_recovery_enabled = var.point_in_time_recovery_enabled

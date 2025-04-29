@@ -74,6 +74,7 @@ No modules.
 | <a name="input_secret_key_prefix"></a> [secret\_key\_prefix](#input\_secret\_key\_prefix) | Key prefix of secret. Ex. {secret\_key\_prefix: PSQL\_} would give keys PSQL\_USER, PSQL\_PASSWORD and so on | `string` | `"PG"` | no |
 | <a name="input_transaction_log_retention_days"></a> [transaction\_log\_retention\_days](#input\_transaction\_log\_retention\_days) | How long transaction logs are stored (1-7). | `number` | `7` | no |
 | <a name="input_user_name"></a> [user\_name](#input\_user\_name) | The username of the default application user. Defaults to the app ID. | `string` | `null` | no |
+| <a name="retain_backups_on_delete"></a> [edition](#input\retain\_backups\_on\_delete) | Whether to retain backups of the instance even after the instance is deleted. | `bool` | `false` | no |
 
 ## Outputs
 
