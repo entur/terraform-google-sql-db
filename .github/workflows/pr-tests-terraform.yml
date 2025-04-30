@@ -22,3 +22,26 @@ jobs:
     with:
       directory: "./modules/postgresql-replica"
       version: 1.8.5
+
+  docs:
+    runs-on: ubuntu-24.04
+    name: Render Terraform Docs
+    needs: [tf-lint-postgresql, tf-lint-postgresql-replica]
+    strategy:
+      matrix:
+        dir:
+          - modules/postgresql
+          - modules/postgresql-replica
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Render terraform docs inside the README.md and push changes back to PR branch
+        uses: terraform-docs/gh-actions@aeae0038ed47a547e0c0fca5c059d3335f48fb25 # v1.3.0
+        with:
+          working-dir: ${{ matrix.dir }}
+          output-file: README.md
+          output-method: inject
+          git-push: "true"
