@@ -249,3 +249,9 @@ variable "instance_edition" {
   default     = "ENTERPRISE"
   description = "Override the default instance edition (`ENTERPRISE` or `ENTERPRISE_PLUS`)."
 }
+
+variable "retain_backups_on_delete" {
+  description = "When this parameter is set to true, Cloud SQL retains backups of the instance even after the instance is deleted."
+  type        = bool
+  default     = true
+}
