@@ -71,3 +71,9 @@ variable "database_flags" {
   }))
   default = {}
 }
+
+variable "instance_edition" {
+  type        = string
+  default     = "ENTERPRISE"
+  description = "Override the default instance edition (`ENTERPRISE` or `ENTERPRISE_PLUS`)."
+}

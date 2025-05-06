@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.9.0](https://github.com/entur/terraform-google-sql-db/compare/v1.8.0...v1.9.0) (2025-04-30)
+
+
+### Features
+
+* add retain_backups_on_delete parameter ([#92](https://github.com/entur/terraform-google-sql-db/issues/92)) ([7d15a6d](https://github.com/entur/terraform-google-sql-db/commit/7d15a6d421456c874c691fbb801a3b6d61f4c212))
+
+## [1.8.0](https://github.com/entur/terraform-google-sql-db/compare/v1.7.5...v1.8.0) (2025-04-09)
+
+
+### Features
+
+* add support for SQL instance edition ([#88](https://github.com/entur/terraform-google-sql-db/issues/88)) ([0404a12](https://github.com/entur/terraform-google-sql-db/commit/0404a120a163e5df9775dba6329f43e9f39943e8))
+
+
+### Bug Fixes
+
+* [skip ci] common dependabot config ([#83](https://github.com/entur/terraform-google-sql-db/issues/83)) ([8f25263](https://github.com/entur/terraform-google-sql-db/commit/8f252630d3bdbe816963135ae69f7c82b4765523))
+
 ## [1.7.5](https://github.com/entur/terraform-google-sql-db/compare/v1.7.4...v1.7.5) (2024-09-26)
 
 

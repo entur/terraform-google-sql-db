@@ -42,6 +42,13 @@ If a desired machine size and/or availability type is not explicitly set, defaul
 | non-production | Shared vCPU    | <1  | 600 MB  | No               |
 | production     | Dedicated vCPU | 1   | 3840 MB | Yes              |
 
+
+### Edition
+Changing this will cause a database restart on existing instances. Choosing **Enterprise Plus** (`ENTERPRISE_PLUS`) over **Enterprise** (`ENTERPRISE`) can also increase costs. Carefully evaluate your requirements before choosing this edition.
+
+Ensure you select the appropriate tier for your use case. For more details about instance editions, refer to the [official documentation](https://cloud.google.com/sql/docs/postgres/instance-settings).
+
+
 ### Sizing
 
 To specify the size of a database instance, supply the `cpu` and `memory` attributes in `var.machine_size` (recommended):
