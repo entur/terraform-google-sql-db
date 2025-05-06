@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/entur/terraform-google-sql-db/compare/v1.8.0...v1.9.0) (2025-04-30)
+
+
+### Features
+
+* add retain_backups_on_delete parameter ([#92](https://github.com/entur/terraform-google-sql-db/issues/92)) ([7d15a6d](https://github.com/entur/terraform-google-sql-db/commit/7d15a6d421456c874c691fbb801a3b6d61f4c212))
+
 ## [1.8.0](https://github.com/entur/terraform-google-sql-db/compare/v1.7.5...v1.8.0) (2025-04-09)
 
 
