@@ -47,6 +47,7 @@ resource "google_sql_database_instance" "main" {
     }
     ip_configuration {
       ssl_mode = "ENCRYPTED_ONLY"
+      private_network = var.enable_private_network ? var.init.networks.vpc_id : null
       dynamic "authorized_networks" {
         for_each = var.authorized_networks
         iterator = authnet
