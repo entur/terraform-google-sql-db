@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/entur/terraform-google-sql-db/compare/v1.9.0...v1.10.0) (2025-09-01)
+
+
+### Features
+
+* support private network ([#105](https://github.com/entur/terraform-google-sql-db/issues/105)) ([80d2ddf](https://github.com/entur/terraform-google-sql-db/commit/80d2ddf04de1dc7f4b9049d7860b2ed312aeb037))
+
 ## [1.9.0](https://github.com/entur/terraform-google-sql-db/compare/v1.8.0...v1.9.0) (2025-04-30)
 
 
