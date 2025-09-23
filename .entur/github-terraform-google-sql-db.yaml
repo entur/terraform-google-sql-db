@@ -1,5 +1,5 @@
 apiVersion: orchestrator.entur.io/github/v1
-kind: Repository
+kind: GitHubActions
 metadata:
   id: terraform-google-sql-db
   trigger: 1755517059
