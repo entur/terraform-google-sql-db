@@ -207,7 +207,7 @@ variable "query_insights_config" {
 }
 
 variable "database_flags" {
-  description = "Override default CloudSQL configuration by specifying database-flags."
+  description = "Override default CloudSQL configuration by specifying database-flags. Note that some flags requires installing extensions (see https://cloud.google.com/sql/docs/postgres/extensions#installing-an-extension)."
   type = map(object({
     name  = string
     value = string
