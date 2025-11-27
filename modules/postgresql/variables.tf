@@ -7,6 +7,10 @@ variable "init" {
       owner      = string
       project_id = string
     })
+    networks = object({
+      project_id = string
+      vpc_id     = string
+    })
     environment   = string
     labels        = map(string)
     is_production = bool
@@ -203,7 +207,7 @@ variable "query_insights_config" {
 }
 
 variable "database_flags" {
-  description = "Override default CloudSQL configuration by specifying database-flags."
+  description = "Override default CloudSQL configuration by specifying database-flags. Note that some flags require installing extensions. (see https://cloud.google.com/sql/docs/postgres/extensions#installing-an-extension)."
   type = map(object({
     name  = string
     value = string
@@ -254,4 +258,10 @@ variable "retain_backups_on_delete" {
   description = "When this parameter is set to true, Cloud SQL retains backups of the instance even after the instance is deleted."
   type        = bool
   default     = true
+}
+
+variable "enable_private_network" {
+  description = "Whether to enable private network connectivity for the Cloud SQL instance. Immutable after it has been enabled."
+  type        = bool
+  default     = false
 }
