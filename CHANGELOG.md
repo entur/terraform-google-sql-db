@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/entur/terraform-google-sql-db/compare/v1.10.0...v1.10.1) (2025-12-10)
+
+
+### Bug Fixes
+
+* lock k8s provider to only upgrade to minor/patch versions ([#114](https://github.com/entur/terraform-google-sql-db/issues/114)) ([8ce92dd](https://github.com/entur/terraform-google-sql-db/commit/8ce92dd22a3f7e5c5099de68ae24bd5147ea8d3f))
+
 ## [1.10.0](https://github.com/entur/terraform-google-sql-db/compare/v1.9.0...v1.10.0) (2025-09-01)
 
 
