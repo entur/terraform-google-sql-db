@@ -6,7 +6,7 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=0.13.2 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >=5 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >=6 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.6.2 |
 
@@ -14,7 +14,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >=5 |
+| <a name="provider_google"></a> [google](#provider\_google) | >=6 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | ~> 2.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.6.2 |
 
@@ -34,7 +34,7 @@ No modules.
 | [google_sql_database_instance.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance) | resource |
 | [google_sql_user.additional_users](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
 | [google_sql_user.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
-| [kubernetes_config_map.main_psql_connection](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
+| [kubernetes_config_map_v1.main_psql_connection](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1) | resource |
 | [kubernetes_secret.additional_database_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
 | [kubernetes_secret.main_database_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
 | [random_integer.additional_users_password_length](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
@@ -53,6 +53,7 @@ No modules.
 | <a name="input_additional_users"></a> [additional\_users](#input\_additional\_users) | A list of user-names in addition to the main user that should be created. | <pre>map(object({<br/>    username                 = string<br/>    create_kubernetes_secret = bool<br/>  }))</pre> | `{}` | no |
 | <a name="input_authorized_networks"></a> [authorized\_networks](#input\_authorized\_networks) | Values for authorized\_networks, list of objects with name and simple strings of IPs or CIDRs. Ex: {name: supermachine, value: 35.90.103.132/30} or {name: rogersmachine, value: 35.90.103.132} | <pre>list(object({<br/>    value = string<br/>    name  = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | Whether to enable high availability with automatic failover over multiple zones ('REGIONAL') vs. single zone ('ZONAL'). | `string` | `null` | no |
+| <a name="input_backup_location"></a> [backup\_location](#input\_backup\_location) | The location of the backup, defaults to eu for production, and europe-west4 for non-production. | `string` | `null` | no |
 | <a name="input_backup_start_time"></a> [backup\_start\_time](#input\_backup\_start\_time) | Start time in UTC for daily backup job in the format HH:MM. This is the start time of a 4 hour time window. | `string` | `"00:00"` | no |
 | <a name="input_create_kubernetes_resources"></a> [create\_kubernetes\_resources](#input\_create\_kubernetes\_resources) | Optionally disables creating k8s resources -psql-connection and -psql-credentials. Can be used to avoid overwriting existing resources on database creation. | `bool` | `true` | no |
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | Override default CloudSQL configuration by specifying database-flags. Note that some flags require installing extensions. (see https://cloud.google.com/sql/docs/postgres/extensions#installing-an-extension). | <pre>map(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `{}` | no |
