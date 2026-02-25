@@ -130,6 +130,12 @@ variable "enable_backup" {
   default     = true
 }
 
+variable "backup_location" {
+  description = "The location of the backup, defaults to eu for production, and europe-west4 for non-production."
+  type        = string
+  default     = null
+}
+
 variable "backup_start_time" {
   description = "Start time in UTC for daily backup job in the format HH:MM. This is the start time of a 4 hour time window."
   type        = string

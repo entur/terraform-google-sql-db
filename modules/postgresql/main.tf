@@ -10,6 +10,7 @@ locals {
   deletion_protection            = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
   availability_type              = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
   machine_size                   = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
+  backup_location                = var.backup_location != null ? var.backup_location : var.init.is_production ? "eu" : "europe-west4"
   offsite_backup_label           = var.disable_offsite_backup == true && var.init.is_production ? { offsite_enabled = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
   labels                         = merge(var.init.labels, local.offsite_backup_label)
   generation                     = format("%03d", var.generation)
@@ -35,7 +36,6 @@ resource "google_sql_database_instance" "main" {
     disk_autoresize_limit       = local.disk_autoresize_limit
     tier                        = local.machine_size
     edition                     = var.instance_edition
-    retain_backups_on_delete    = var.retain_backups_on_delete
     backup_configuration {
       enabled                        = var.enable_backup
       point_in_time_recovery_enabled = var.point_in_time_recovery_enabled
