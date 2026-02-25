@@ -86,7 +86,7 @@ resource "google_sql_database_instance" "main" {
   }
 
   lifecycle {
-    ignore_changes = [settings.backup_configuration.location]
+    ignore_changes = [settings[0].backup_configuration[0].location]
   }
 }
 
