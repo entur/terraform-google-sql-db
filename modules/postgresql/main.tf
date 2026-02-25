@@ -100,7 +100,7 @@ resource "google_sql_user" "main" {
   password = random_password.password.result
 }
 
-resource "kubernetes_config_map_v1" "main_psql_connection" {
+resource "kubernetes_config_map" "main_psql_connection" {
   count = var.create_kubernetes_resources ? 1 : 0
   depends_on = [
     google_sql_database_instance.main
