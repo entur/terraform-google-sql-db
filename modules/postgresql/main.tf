@@ -84,6 +84,10 @@ resource "google_sql_database_instance" "main" {
     update = "60m"
     delete = "60m"
   }
+
+  lifecycle {
+    ignore_changes = [settings.backup_configuration.location]
+  }
 }
 
 resource "google_sql_database" "main" {
