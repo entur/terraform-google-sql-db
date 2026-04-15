@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.2](https://github.com/entur/terraform-google-sql-db/compare/v1.10.1...v1.10.2) (2026-04-15)
+
+
+### Bug Fixes
+
+* ignore timeouts setting on database ([#125](https://github.com/entur/terraform-google-sql-db/issues/125)) ([06313a3](https://github.com/entur/terraform-google-sql-db/commit/06313a30f09ea726a7f19c224f9ba02fe13f0f47))
+
 ## [1.10.1](https://github.com/entur/terraform-google-sql-db/compare/v1.10.0...v1.10.1) (2025-12-10)
 
 
