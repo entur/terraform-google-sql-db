@@ -95,6 +95,10 @@ resource "google_sql_database" "main" {
   name     = each.key
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
+
+  lifecycle {
+    ignore_changes = [timeouts]
+  }
 }
 
 resource "google_sql_user" "main" {
