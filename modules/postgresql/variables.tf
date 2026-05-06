@@ -88,7 +88,7 @@ variable "additional_users" {
     username = string
   }))
   default = {}
-  # validate username since it is used in k8s resource-names
+  # validate username
   validation {
     condition = length([
       for user in values(var.additional_users) : true if can(regex("^[0-9a-z-]+$", user.username))
