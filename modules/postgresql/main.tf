@@ -2,7 +2,7 @@ locals {
   # If updated, reflect changes in README.md
   default_tiers = {
     prod     = "db-custom-1-3840"
-    non-prod = "db-f1-micro"
+    non-prod = "db-custom-1-3840"
   }
 
   user_name                      = var.user_name != null ? var.user_name : var.init.app.id
