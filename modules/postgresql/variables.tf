@@ -25,12 +25,11 @@ variable "region" {
 
 variable "machine_size" {
   description = "Map of the database instance CPU count (cpu) and memory sizes in MB (memory). Optionally, set a tier override (tier). See README.md for examples."
-  # type = object({
-  #   tier   = optional(string) # Optional attributes not supported until Terraform 1.3
-  #   cpu    = number
-  #   memory = number
-  # })
-  type = map(any) # map(any) forces map to be same type of the any type
+  type = object({
+    tier   = optional(string)
+    cpu    = optional(number)
+    memory = optional(number)
+  })
   #default = {
   #tier   = "db-f1-micro"
   #cpu    = 1
@@ -38,15 +37,15 @@ variable "machine_size" {
   #}
   default = null
   validation {
-    condition     = var.machine_size != null ? try(var.machine_size.cpu, 1) >= 1 && try(var.machine_size.cpu, 1) <= 96 : true
+    condition     = var.machine_size == null || try(var.machine_size.tier, null) != null || try(var.machine_size.cpu, null) == null ? true : var.machine_size.cpu >= 1 && var.machine_size.cpu <= 96
     error_message = "CPU must be a whole number between 1 and 96."
   }
   validation {
-    condition     = var.machine_size != null ? try(var.machine_size.memory, 256) % 256 == 0 && try(var.machine_size.memory, 3840) >= 3840 && try(var.machine_size.memory, 3840) <= 13312 : true
-    error_message = "Memory must be divisable by 256, and between 3840 and 13312."
+    condition     = var.machine_size == null || try(var.machine_size.tier, null) != null || try(var.machine_size.memory, null) == null ? true : var.machine_size.memory % 256 == 0 && var.machine_size.memory >= 3840 && var.machine_size.memory <= 13312
+    error_message = "Memory must be divisible by 256, larger than 3840, and at most 13312."
   }
   validation {
-    condition     = var.machine_size != null ? (try(var.machine_size.tier, null) != null) && (try(var.machine_size.cpu, null) == null || try(var.machine_size.memory, null) == null) || (try(var.machine_size.tier, null) == null) && (try(var.machine_size.cpu, null) != null && try(var.machine_size.memory, null) != null) : true
+    condition     = var.machine_size == null ? true : (try(var.machine_size.tier, null) != null && try(var.machine_size.cpu, null) == null && try(var.machine_size.memory, null) == null) || (try(var.machine_size.tier, null) == null && try(var.machine_size.cpu, null) != null && try(var.machine_size.memory, null) != null)
     error_message = "Either supply desired resource limits for cpu and memory (recommended), or specify a tier."
   }
 }
@@ -68,9 +67,8 @@ variable "databases" {
 }
 
 variable "database_version" {
-  description = "The PostgreSQL version (see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version)."
+  description = "The PostgreSQL version (see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version-1)."
   type        = string
-  default     = "POSTGRES_14"
 
   validation {
     condition     = can(regex("^POSTGRES_[1-9][0-9]$", var.database_version))
@@ -87,11 +85,10 @@ variable "user_name" {
 variable "additional_users" {
   description = "A list of user-names in addition to the main user that should be created."
   type = map(object({
-    username                 = string
-    create_kubernetes_secret = bool
+    username = string
   }))
   default = {}
-  # validate username since it is used in k8s resource-names
+  # validate username
   validation {
     condition = length([
       for user in values(var.additional_users) : true if can(regex("^[0-9a-z-]+$", user.username))
@@ -213,12 +210,6 @@ variable "database_flags" {
     value = string
   }))
   default = {}
-}
-
-variable "create_kubernetes_resources" {
-  description = "Optionally disables creating k8s resources -psql-connection and -psql-credentials. Can be used to avoid overwriting existing resources on database creation."
-  type        = bool
-  default     = true
 }
 
 variable "authorized_networks" {

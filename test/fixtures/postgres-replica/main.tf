@@ -22,6 +22,7 @@ module "postgresql" {
   source              = "../../../modules/postgresql"
   init                = module.init
   generation          = random_integer.random_database_generation.result
+  database_version    = "POSTGRES_18"
   availability_type   = "REGIONAL"
   databases           = ["database-1", "database-2"]
   deletion_protection = false
@@ -32,8 +33,8 @@ module "postgresql" {
   }
 
   additional_users = {
-    user1 = { username = "user1", create_kubernetes_secret = false },
-    user2 = { username = "user2", create_kubernetes_secret = false }
+    user1 = { username = "user1" },
+    user2 = { username = "user2" }
   }
 }
 

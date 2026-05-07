@@ -26,16 +26,16 @@ func TestPostgreSqlReplicaModule(t *testing.T) {
 		op := gcloud.Runf(t, "sql instances describe %s --project %s", instanceNames[0], projectId)
 
 		assert.Equal(1, len(op.Get("replicaNames").Array()), "Expected 1 replicas")
-		
+
 		instanceNames = append(instanceNames, utils.GetResultStrSlice(op.Get("replicaNames").Array())...)
 
 		for _, instance := range instanceNames {
 			op = gcloud.Runf(t, "sql instances describe %s --project %s", instance, projectId)
 
 			// assert general database settings
-			assert.Equal("POSTGRES_14", op.Get("databaseVersion").String(), "Expected POSTGRES_14 databaseVersion")
+			assert.Equal("POSTGRES_18", op.Get("databaseVersion").String(), "Expected POSTGRES_18 databaseVersion")
 			assert.Equal("RUNNABLE", op.Get("state").String(), "Expected RUNNABLE state")
-			assert.Equal("europe-west1", op.Get("region").String(), "Expected europe-west1 region")		
+			assert.Equal("europe-west1", op.Get("region").String(), "Expected europe-west1 region")
 
 			// master specific validation
 			if instance == cloudSqlT.GetStringOutput("instance_name") {

@@ -32,8 +32,3 @@ output "databases" {
   description = "Databases created on this instance."
   value       = var.databases
 }
-
-output "kubernetes_namespace" {
-  description = "Name of the Kubernetes namespace where config maps and secrets are deployed."
-  value       = var.create_kubernetes_resources ? kubernetes_secret.main_database_credentials[0].metadata[0].namespace : null
-}

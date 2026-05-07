@@ -37,10 +37,6 @@ jobs:
           environment: dev
           gcp_workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
           gcp_service_account: ${{ vars.SERVICE_ACCOUNT }}
-      - name: Authenticate with GKE
-        uses: entur/gha-meta/.github/actions/k8s-auth@v1
-        with:
-          environment: dev
       - name: Run recursive Go integration tests
         working-directory: test/integration
         run: go test -tags=integration ./... -timeout 30m

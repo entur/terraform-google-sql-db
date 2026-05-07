@@ -2,20 +2,20 @@ locals {
   # If updated, reflect changes in README.md
   default_tiers = {
     prod     = "db-custom-1-3840"
-    non-prod = "db-f1-micro"
+    non-prod = "db-custom-1-3840"
   }
 
   user_name                      = var.user_name != null ? var.user_name : var.init.app.id
   retained_backups               = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
   deletion_protection            = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
   availability_type              = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
-  machine_size                   = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
+  default_machine_size           = var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
+  machine_size                   = var.machine_size != null ? var.machine_size.tier != null ? var.machine_size.tier : "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}" : local.default_machine_size
   offsite_backup_label           = var.disable_offsite_backup == true && var.init.is_production ? { offsite_enabled = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
   labels                         = merge(var.init.labels, local.offsite_backup_label)
   generation                     = format("%03d", var.generation)
   disk_autoresize_limit          = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
   additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
-  additional_user_credentials    = !var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
   additional_sm_user_credentials = !var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
 }
 
@@ -108,21 +108,6 @@ resource "google_sql_user" "main" {
   password = random_password.password.result
 }
 
-resource "kubernetes_config_map" "main_psql_connection" {
-  count = var.create_kubernetes_resources ? 1 : 0
-  depends_on = [
-    google_sql_database_instance.main
-  ]
-  metadata {
-    name      = "${var.init.app.name}-psql-connection"
-    namespace = var.init.app.name
-    labels    = var.init.labels
-  }
-
-  data = {
-    INSTANCES = "${google_sql_database_instance.main.connection_name}=tcp:5432"
-  }
-}
 resource "random_integer" "password_length" {
   min = 32
   max = 64
@@ -131,24 +116,6 @@ resource "random_password" "password" {
   length           = random_integer.password_length.result
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
-}
-
-resource "kubernetes_secret" "main_database_credentials" {
-  count = var.create_kubernetes_resources ? 1 : 0
-  depends_on = [
-    google_sql_database_instance.main
-  ]
-  metadata {
-    name      = "${var.init.app.name}-psql-credentials"
-    namespace = var.init.app.name
-    labels    = var.init.labels
-  }
-  data = {
-    PGHOST     = "localhost"
-    PGPORT     = 5432
-    PGUSER     = google_sql_user.main.name
-    PGPASSWORD = random_password.password.result
-  }
 }
 
 resource "google_sql_user" "additional_users" {
@@ -172,28 +139,8 @@ resource "random_password" "additional_users_password" {
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
-resource "kubernetes_secret" "additional_database_credentials" {
-  for_each = local.additional_user_credentials
-  depends_on = [
-    google_sql_database_instance.main
-  ]
-  metadata {
-    name      = "${var.init.app.name}-${each.value.username}-psql-credentials"
-    namespace = var.init.app.name
-    labels    = var.init.labels
-  }
-  data = {
-    PGHOST     = "localhost"
-    PGPORT     = 5432
-    PGUSER     = google_sql_user.additional_users[each.key].name
-    PGPASSWORD = random_password.additional_users_password[each.key].result
-  }
-}
-
 locals {
   credentials = {
-    HOST      = "localhost",
-    PORT      = 5432,
     USER      = google_sql_user.main.name,
     PASSWORD  = random_password.password.result,
     INSTANCES = google_sql_database_instance.main.connection_name
