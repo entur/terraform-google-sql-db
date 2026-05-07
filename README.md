@@ -40,7 +40,7 @@ If a desired machine size and/or availability type is not explicitly set, defaul
 
 | Environment    | Type           | CPU | Memory  | Highly available |
 | -------------- | -------------- | --- | ------- | ---------------- |
-| non-production | Shared vCPU    | <1  | 600 MB  | No               |
+| non-production | Dedicated vCPU | 1   | 3840 MB | No               |
 | production     | Dedicated vCPU | 1   | 3840 MB | Yes              |
 
 ### Edition
