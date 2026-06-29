@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout source code
-        uses: actions/checkout@1cce3390c2bfda521930d01229c073c7ff920824 # v6.0.2
+        uses: actions/checkout@b9e0990d219a03df7633c93f6f005a8fecbcab22 # v6.0.2
 
       - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
         env:
