@@ -14,6 +14,12 @@ variable "init" {
     environment   = string
     labels        = map(string)
     is_production = bool
+    service_accounts = object({
+      default = object({
+        email = string
+        id    = string
+      })
+    })
   })
 }
 
@@ -76,6 +82,11 @@ variable "database_version" {
   }
 }
 
+variable "enable_basic_auth" {
+  description = "Enables basic auth for the instance. If enabled, a user will be created and the credentials will be stored in Secret Manager."
+  type        = bool
+}
+
 variable "user_name" {
   description = "The username of the default application user. Defaults to the app ID."
   type        = string
@@ -95,6 +106,48 @@ variable "additional_users" {
     ]) == length(values(var.additional_users))
     error_message = "Username must match regex '[0-9a-z-]'."
   }
+}
+
+variable "enable_iam_auth" {
+  description = "Enables IAM auth for the instance. If enabled, a user will be created and the credentials will be stored in Secret Manager."
+  type        = bool
+}
+
+variable "iam_auth_default_application_user" {
+  description = "Adds IAM auth for the default application user. If enabled, the application service account will be added to the instance, and granted the 'cloudsqlsuperuser' role."
+  type = object({
+    enabled = bool
+    roles   = optional(list(string), ["cloudsqlsuperuser"])
+  })
+  default = {
+    enabled = true
+  }
+}
+
+variable "iam_auth_additional_service_account_users" {
+  description = "Adds IAM auth for service account users. The email is the full service account email, and the default role is 'cloudsqlsuperuser'. If empty, no additional service account users will be added."
+  type = map(object({
+    email = string
+    roles = optional(list(string), ["cloudsqlsuperuser"])
+  }))
+  default = {}
+}
+
+variable "iam_auth_users" {
+  description = "Adds additional IAM auth users. The email is the full user email, and the default role is 'cloudsqlsuperuser'. If empty, no additional IAM auth users will be added."
+  type = map(object({
+    email = string
+    roles = optional(list(string), ["cloudsqlsuperuser"])
+  }))
+  default = {}
+}
+variable "iam_auth_groups" {
+  description = "Adds additional IAM auth groups. If empty, no additional IAM auth groups will be added."
+  type = map(object({
+    email = string
+    roles = optional(list(string), ["cloudsqlsuperuser"])
+  }))
+  default = {}
 }
 
 variable "retained_backups" {

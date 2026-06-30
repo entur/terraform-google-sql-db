@@ -17,6 +17,28 @@ locals {
   disk_autoresize_limit          = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
   additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
   additional_sm_user_credentials = !var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
+
+  iam_auth_database_flag = var.enable_iam_auth ? {
+    "enable_iam_auth" = {
+      name  = "cloudsql.iam_authentication",
+      value = "on"
+    }
+  } : {}
+
+  iam_auth_default_application_user = var.enable_iam_auth && var.iam_auth_default_application_user.enabled ? {
+    "main" = {
+      name  = trimsuffix(var.init.service_accounts.default.email, ".gserviceaccount.com"),
+      roles = var.iam_auth_default_application_user.roles
+  } } : {}
+  iam_auth_additional_service_account_users = var.enable_iam_auth ? {
+    for key, value in var.iam_auth_additional_service_account_users : key => {
+      name  = trimsuffix(value.email, ".gserviceaccount.com"),
+      roles = value.roles
+    }
+  } : {}
+
+  iam_auth_users  = { for key, value in var.iam_auth_users : key => value if var.enable_iam_auth }
+  iam_auth_groups = { for key, value in var.iam_auth_groups : key => value if var.enable_iam_auth }
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -69,7 +91,7 @@ resource "google_sql_database_instance" "main" {
       record_application_tags = var.query_insights_config.record_application_tags
     }
     dynamic "database_flags" {
-      for_each = var.database_flags
+      for_each = merge(var.database_flags, local.iam_auth_database_flag)
       content {
         name  = database_flags.value.name
         value = database_flags.value.value
@@ -102,10 +124,16 @@ resource "google_sql_database" "main" {
 }
 
 resource "google_sql_user" "main" {
+  count    = var.enable_basic_auth ? 1 : 0
   name     = local.user_name
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
-  password = random_password.password.result
+  password = random_password.password[0].result
+}
+
+moved {
+  from = google_sql_user.main
+  to   = google_sql_user.main[0]
 }
 
 resource "random_integer" "password_length" {
@@ -113,9 +141,15 @@ resource "random_integer" "password_length" {
   max = 64
 }
 resource "random_password" "password" {
+  count            = var.enable_basic_auth ? 1 : 0
   length           = random_integer.password_length.result
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+moved {
+  from = random_password.password
+  to   = random_password.password[0]
 }
 
 resource "google_sql_user" "additional_users" {
@@ -140,11 +174,16 @@ resource "random_password" "additional_users_password" {
 }
 
 locals {
-  credentials = {
-    USER      = google_sql_user.main.name,
-    PASSWORD  = random_password.password.result,
-    INSTANCES = google_sql_database_instance.main.connection_name
-  }
+  credentials = merge(
+    var.enable_basic_auth ? {
+      USER     = google_sql_user.main[0].name,
+      PASSWORD = random_password.password[0].result,
+    } : {},
+    length(local.iam_auth_default_application_user) > 0 ? {
+      IAMUSER = local.iam_auth_default_application_user.main.name,
+    } : {},
+    { INSTANCES = google_sql_database_instance.main.connection_name }
+  )
 
 }
 
@@ -181,7 +220,7 @@ locals {
         cred_key         = cred_key
         cred_data        = cred
       }
-    ]
+    ] if var.enable_basic_auth
   ])
 }
 
@@ -221,4 +260,33 @@ resource "google_secret_manager_secret_version" "db_secret_version_additional_da
     google_secret_manager_secret.db_secret_additional,
     random_password.additional_users_password
   ]
+}
+
+### IAM Auth ###
+resource "google_sql_user" "sa_iam_auth" {
+  for_each       = merge(local.iam_auth_default_application_user, local.iam_auth_additional_service_account_users)
+  name           = each.value.name
+  instance       = google_sql_database_instance.main.name
+  type           = "CLOUD_IAM_SERVICE_ACCOUNT"
+  project        = var.init.app.project_id
+  database_roles = each.value.roles
+}
+
+
+resource "google_sql_user" "user_iam_auth" {
+  for_each       = local.iam_auth_users
+  name           = each.value.email
+  instance       = google_sql_database_instance.main.name
+  type           = "CLOUD_IAM_USER"
+  project        = var.init.app.project_id
+  database_roles = each.value.roles
+}
+
+resource "google_sql_user" "group_iam_auth" {
+  for_each       = local.iam_auth_groups
+  name           = each.value.email
+  instance       = google_sql_database_instance.main.name
+  type           = "CLOUD_IAM_GROUP"
+  project        = var.init.app.project_id
+  database_roles = each.value.roles
 }
