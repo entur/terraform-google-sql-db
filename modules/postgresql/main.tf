@@ -24,6 +24,14 @@ locals {
       value = "on"
     }
   } : {}
+  pgaudit_database_flag = var.enable_pgaudit ? {
+    pgaudit = {
+      name  = "cloudsql.enable_pgaudit"
+      value = "on"
+    }
+  } : {}
+
+  database_flags = merge(var.database_flags, local.iam_auth_database_flag, local.pgaudit_database_flag)
 
   iam_auth_default_application_user = var.enable_iam_auth && var.iam_auth_default_application_user.enabled ? {
     "main" = {
@@ -91,7 +99,7 @@ resource "google_sql_database_instance" "main" {
       record_application_tags = var.query_insights_config.record_application_tags
     }
     dynamic "database_flags" {
-      for_each = merge(var.database_flags, local.iam_auth_database_flag)
+      for_each = local.database_flags
       content {
         name  = database_flags.value.name
         value = database_flags.value.value

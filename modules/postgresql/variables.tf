@@ -309,3 +309,9 @@ variable "enable_private_network" {
   type        = bool
   default     = false
 }
+
+variable "enable_pgaudit" {
+  description = "Enables pgaudit for the Cloud SQL instance. The pgaudit extension must also be enabled in the database. Warning: changing this value will restart the database instance."
+  type        = bool
+  default     = false
+}
