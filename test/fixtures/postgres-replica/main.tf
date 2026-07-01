@@ -23,6 +23,8 @@ module "postgresql" {
   init                = module.init
   generation          = random_integer.random_database_generation.result
   database_version    = "POSTGRES_18"
+  enable_basic_auth   = true
+  enable_iam_auth     = false
   availability_type   = "REGIONAL"
   databases           = ["database-1", "database-2"]
   deletion_protection = false

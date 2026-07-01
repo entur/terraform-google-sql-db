@@ -15,7 +15,7 @@ locals {
   labels                         = merge(var.init.labels, local.offsite_backup_label)
   generation                     = format("%03d", var.generation)
   disk_autoresize_limit          = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
-  additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
+  additional_users               = var.enable_basic_auth ? { for key, value in var.additional_users : key => value if value.username != local.user_name } : {}
   additional_sm_user_credentials = !var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
 
   iam_auth_database_flag = var.enable_iam_auth ? {
