@@ -2,6 +2,11 @@ locals {
   machine_size   = var.machine_size_override != null ? try(var.machine_size_override.tier, "db-custom-${var.machine_size_override.cpu}-${var.machine_size_override.memory}") : var.master_instance.settings[0].tier
   labels         = merge(var.master_instance.settings[0].user_labels, { offsite_enabled = false })
   replica_number = format("%03d", var.replica_number)
+  
+  database_flags = merge(
+    { for k, v in var.database_flags : k => v if v.name != "cloudsql.iam_authentication" },
+    { iam_authentication = { name = "cloudsql.iam_authentication", value = "on" } },
+  )
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -35,7 +40,7 @@ resource "google_sql_database_instance" "replica" {
       record_application_tags = var.master_instance.settings[0].insights_config[0].record_application_tags
     }
     dynamic "database_flags" {
-      for_each = var.database_flags
+      for_each = local.database_flags
       content {
         name  = database_flags.value.name
         value = database_flags.value.value

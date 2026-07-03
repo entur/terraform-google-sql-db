@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "modules/postgresql/**"
+      - "modules/postgresql-replica/**"
       - "test/**"
     branches:
       - main

@@ -28,6 +28,11 @@ output "instance" {
   value       = google_sql_database_instance.main
 }
 
+output "iam_group_users" {
+  description = "Names (emails) of the registered CLOUD_IAM_GROUP database users."
+  value       = [for g in google_sql_user.iam_groups : g.name]
+}
+
 output "databases" {
   description = "Databases created on this instance."
   value       = var.databases

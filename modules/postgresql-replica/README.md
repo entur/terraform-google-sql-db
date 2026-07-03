@@ -1,5 +1,11 @@
 # Postgres Terraform Module #
 
+> **IAM database authentication is always enabled.** This module forces the
+> `cloudsql.iam_authentication` flag to `on`. Any `database_flags` entry
+> targeting `cloudsql.iam_authentication` is stripped and replaced (regardless
+> of its map key), so it cannot be disabled. Do not set this flag yourself;
+> leave it to the module.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 

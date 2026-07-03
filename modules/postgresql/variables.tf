@@ -100,6 +100,12 @@ variable "additional_users" {
   }
 }
 
+variable "iam_groups" {
+  description = "IAM groups (by email) to register as CLOUD_IAM_GROUP database users on the instance. Members authenticate via IAM; project-IAM and in-database access are managed in GCP. Read replicas inherit these automatically."
+  type        = set(string)
+  default     = []
+}
+
 variable "retained_backups" {
   description = "The number of backups to retain. Default is 30 for production, 7 for non-production."
   type        = number

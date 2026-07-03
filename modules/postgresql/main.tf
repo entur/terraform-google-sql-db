@@ -17,6 +17,11 @@ locals {
   additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
   additional_user_credentials    = !var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
   additional_sm_user_credentials = !var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
+
+  database_flags = merge(
+    { for k, v in var.database_flags : k => v if v.name != "cloudsql.iam_authentication" },
+    { iam_authentication = { name = "cloudsql.iam_authentication", value = "on" } },
+  )
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -69,7 +74,7 @@ resource "google_sql_database_instance" "main" {
       record_application_tags = var.query_insights_config.record_application_tags
     }
     dynamic "database_flags" {
-      for_each = var.database_flags
+      for_each = local.database_flags
       content {
         name  = database_flags.value.name
         value = database_flags.value.value
@@ -157,6 +162,14 @@ resource "google_sql_user" "additional_users" {
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
   password = random_password.additional_users_password[each.key].result
+}
+
+resource "google_sql_user" "iam_groups" {
+  for_each = var.iam_groups
+  name     = each.value
+  project  = var.init.app.project_id
+  instance = google_sql_database_instance.main.name
+  type     = "CLOUD_IAM_GROUP"
 }
 
 resource "random_integer" "additional_users_password_length" {

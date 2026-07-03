@@ -35,6 +35,8 @@ module "postgresql" {
     user1 = { username = "user1", create_kubernetes_secret = false },
     user2 = { username = "user2", create_kubernetes_secret = false }
   }
+
+  iam_groups = ["sg-dig-team-produkt@entur.no"]
 }
 
 
