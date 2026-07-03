@@ -52,5 +52,6 @@ module "postgres-replica" {
   replica_number    = 1
   master_instance   = module.postgresql.instance
   availability_type = "ZONAL"
+  enable_iam_auth   = true
   secret_key_prefix = "PG${random_integer.random_database_generation.result}_REPLICA_"
 }

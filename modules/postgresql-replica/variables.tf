@@ -78,6 +78,12 @@ variable "database_flags" {
   default = {}
 }
 
+variable "enable_iam_auth" {
+  description = "Enables IAM database authentication for the replica instance. IAM users and groups must be managed on the primary instance."
+  type        = bool
+  default     = false
+}
+
 variable "secret_key_prefix" {
   description = "Key prefix for replica secrets. Ex. {secret_key_prefix: REPLICA_PG} creates REPLICA_PGINSTANCES and REPLICA_PGIAMUSER."
   type        = string
