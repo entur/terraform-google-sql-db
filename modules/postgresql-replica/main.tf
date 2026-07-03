@@ -3,24 +3,8 @@ locals {
   labels         = merge(var.master_instance.settings[0].user_labels, { offsite_enabled = false })
   replica_number = format("%03d", var.replica_number)
 
-  iam_auth_database_flag = var.enable_iam_auth ? {
-    "enable_iam_auth" = {
-      name  = "cloudsql.iam_authentication"
-      value = "on"
-    }
-  } : {}
-
-  database_flags = merge(var.database_flags, local.iam_auth_database_flag)
-
-  iam_auth_default_application_user = var.enable_iam_auth && var.iam_auth_default_application_user.enabled ? {
-    "main" = {
-      name = trimsuffix(var.init.service_accounts.default.email, ".gserviceaccount.com")
-  } } : {}
-
   credentials = merge(
-    length(local.iam_auth_default_application_user) > 0 ? {
-      IAMUSER = local.iam_auth_default_application_user.main.name,
-    } : {},
+    { IAMUSER = trimsuffix(var.init.service_accounts.default.email, ".gserviceaccount.com") },
     { INSTANCES = google_sql_database_instance.replica.connection_name }
   )
 }
@@ -56,7 +40,7 @@ resource "google_sql_database_instance" "replica" {
       record_application_tags = var.master_instance.settings[0].insights_config[0].record_application_tags
     }
     dynamic "database_flags" {
-      for_each = local.database_flags
+      for_each = var.database_flags
       content {
         name  = database_flags.value.name
         value = database_flags.value.value

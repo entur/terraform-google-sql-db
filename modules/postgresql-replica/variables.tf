@@ -78,22 +78,6 @@ variable "database_flags" {
   default = {}
 }
 
-variable "enable_iam_auth" {
-  description = "Enables IAM auth for the replica instance. If add_replica_secret_manager_credentials is true, the default application IAM username is stored in Secret Manager. The primary instance must also have IAM auth enabled."
-  type        = bool
-  default     = false
-}
-
-variable "iam_auth_default_application_user" {
-  description = "Adds IAM auth credentials for the default application user. If enabled, the application service account username is stored in Secret Manager."
-  type = object({
-    enabled = bool
-  })
-  default = {
-    enabled = true
-  }
-}
-
 variable "secret_key_prefix" {
   description = "Key prefix for replica secrets. Ex. {secret_key_prefix: REPLICA_PG} creates REPLICA_PGINSTANCES and REPLICA_PGIAMUSER."
   type        = string
