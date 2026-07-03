@@ -17,7 +17,7 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=0.13.2 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >=5 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >=5.12.0 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.6.2 |
 
@@ -25,7 +25,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >=5 |
+| <a name="provider_google"></a> [google](#provider\_google) | >=5.12.0 |
 | <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | ~> 2.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.6.2 |
 
@@ -44,6 +44,7 @@ No modules.
 | [google_sql_database.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database) | resource |
 | [google_sql_database_instance.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance) | resource |
 | [google_sql_user.additional_users](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
+| [google_sql_user.iam_groups](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
 | [google_sql_user.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
 | [kubernetes_config_map.main_psql_connection](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map) | resource |
 | [kubernetes_secret.additional_database_credentials](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/secret) | resource |
@@ -76,6 +77,7 @@ No modules.
 | <a name="input_enable_backup"></a> [enable\_backup](#input\_enable\_backup) | Whether to enable daily backup of databases. | `bool` | `true` | no |
 | <a name="input_enable_private_network"></a> [enable\_private\_network](#input\_enable\_private\_network) | Whether to enable private network connectivity for the Cloud SQL instance. Immutable after it has been enabled. | `bool` | `false` | no |
 | <a name="input_generation"></a> [generation](#input\_generation) | The generation (aka serial no.) of the instance. Starts at 1, ends at 999. Will be padded with leading zeros. | `number` | `1` | no |
+| <a name="input_iam_groups"></a> [iam\_groups](#input\_iam\_groups) | IAM groups (by email) to register as CLOUD\_IAM\_GROUP database users on the instance. Members authenticate via IAM; project-IAM and in-database access are managed in GCP. Read replicas inherit these automatically. | `set(string)` | `[]` | no |
 | <a name="input_instance_edition"></a> [instance\_edition](#input\_instance\_edition) | Override the default instance edition (`ENTERPRISE` or `ENTERPRISE_PLUS`). | `string` | `"ENTERPRISE"` | no |
 | <a name="input_machine_size"></a> [machine\_size](#input\_machine\_size) | Map of the database instance CPU count (cpu) and memory sizes in MB (memory). Optionally, set a tier override (tier). See README.md for examples. | `map(any)` | `null` | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | The day of the week (1-7), and hour of the day (0-24) in UTC to perform database instance maintenance. This is the start time of the one hour maintinance window. | <pre>object({<br/>    day  = number<br/>    hour = number<br/>  })</pre> | <pre>{<br/>  "day": 2,<br/>  "hour": 0<br/>}</pre> | no |
@@ -95,6 +97,7 @@ No modules.
 |------|-------------|
 | <a name="output_additional_users"></a> [additional\_users](#output\_additional\_users) | Map containing the username and password for any additional users. |
 | <a name="output_databases"></a> [databases](#output\_databases) | Databases created on this instance. |
+| <a name="output_iam_group_users"></a> [iam\_group\_users](#output\_iam\_group\_users) | Names (emails) of the registered CLOUD\_IAM\_GROUP database users. |
 | <a name="output_init"></a> [init](#output\_init) | The output of the consumed init module. |
 | <a name="output_instance"></a> [instance](#output\_instance) | The database instance output, as described in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance. |
 | <a name="output_kubernetes_namespace"></a> [kubernetes\_namespace](#output\_kubernetes\_namespace) | Name of the Kubernetes namespace where config maps and secrets are deployed. |
