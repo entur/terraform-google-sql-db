@@ -10,6 +10,12 @@ variable "init" {
     environment   = string
     labels        = map(string)
     is_production = bool
+    service_accounts = object({
+      default = object({
+        email = string
+        id    = string
+      })
+    })
   })
 }
 
@@ -70,6 +76,34 @@ variable "database_flags" {
     value = string
   }))
   default = {}
+}
+
+variable "enable_iam_auth" {
+  description = "Enables IAM auth for the replica instance and stores the default application IAM username in Secret Manager. The primary instance must also have IAM auth enabled."
+  type        = bool
+  default     = false
+}
+
+variable "iam_auth_default_application_user" {
+  description = "Adds IAM auth credentials for the default application user. If enabled, the application service account username is stored in Secret Manager."
+  type = object({
+    enabled = bool
+  })
+  default = {
+    enabled = true
+  }
+}
+
+variable "secret_key_prefix" {
+  description = "Key prefix for replica secrets. Ex. {secret_key_prefix: REPLICA_PG} creates REPLICA_PGINSTANCES and REPLICA_PGIAMUSER."
+  type        = string
+  default     = "PG_REPLICA"
+}
+
+variable "add_replica_secret_manager_credentials" {
+  description = "Set to false to not store replica connection and IAM credentials in Secret Manager."
+  type        = bool
+  default     = true
 }
 
 variable "instance_edition" {

@@ -24,7 +24,8 @@ module "postgresql" {
   generation          = random_integer.random_database_generation.result
   database_version    = "POSTGRES_18"
   enable_basic_auth   = true
-  enable_iam_auth     = false
+  enable_iam_auth     = true
+  secret_key_prefix   = "PG${random_integer.random_database_generation.result}_"
   availability_type   = "REGIONAL"
   databases           = ["database-1", "database-2"]
   deletion_protection = false
@@ -51,4 +52,6 @@ module "postgres-replica" {
   replica_number    = 1
   master_instance   = module.postgresql.instance
   availability_type = "ZONAL"
+  enable_iam_auth   = true
+  secret_key_prefix = "PG${random_integer.random_database_generation.result}_REPLICA_"
 }

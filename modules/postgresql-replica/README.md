@@ -1,5 +1,8 @@
 # Postgres Terraform Module #
 
+> [!IMPORTANT]
+> The primary instance must still have IAM auth enabled too. For Helm, the replica instance should use the matching prefix, for example `secretKeyPrefix: PG_REPLICA`, so it reads `PG_REPLICAINSTANCES` and `PG_REPLICAIAMUSER`.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -22,19 +25,25 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [google_secret_manager_secret.replica_db_secret](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret) | resource |
+| [google_secret_manager_secret_version.replica_db_secret_version](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/secret_manager_secret_version) | resource |
 | [google_sql_database_instance.replica](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br/>    app = object({<br/>      id         = string<br/>      name       = string<br/>      owner      = string<br/>      project_id = string<br/>    })<br/>    environment   = string<br/>    labels        = map(string)<br/>    is_production = bool<br/>  })</pre> | n/a | yes |
+| <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br/>    app = object({<br/>      id         = string<br/>      name       = string<br/>      owner      = string<br/>      project_id = string<br/>    })<br/>    environment   = string<br/>    labels        = map(string)<br/>    is_production = bool<br/>    service_accounts = object({<br/>      default = object({<br/>        email = string<br/>        id    = string<br/>      })<br/>    })<br/>  })</pre> | n/a | yes |
 | <a name="input_master_instance"></a> [master\_instance](#input\_master\_instance) | The master instance to create a read-replica for. Must be a 'google\_sql\_database\_instance' from either the master resource or data. | `any` | n/a | yes |
+| <a name="input_add_replica_secret_manager_credentials"></a> [add\_replica\_secret\_manager\_credentials](#input\_add\_replica\_secret\_manager\_credentials) | Set to false to not store replica connection and IAM credentials in Secret Manager. | `bool` | `true` | no |
 | <a name="input_availability_type"></a> [availability\_type](#input\_availability\_type) | Whether to enable high availability with automatic failover to another read-replica. 'REGIONAL' for HA, 'ZONAL' for single zone. | `string` | `null` | no |
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | Override default CloudSQL configuration by specifying database-flags. | <pre>map(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | `{}` | no |
+| <a name="input_enable_iam_auth"></a> [enable\_iam\_auth](#input\_enable\_iam\_auth) | Enables IAM auth for the replica instance and stores the default application IAM username in Secret Manager. The primary instance must also have IAM auth enabled. | `bool` | `false` | no |
+| <a name="input_iam_auth_default_application_user"></a> [iam\_auth\_default\_application\_user](#input\_iam\_auth\_default\_application\_user) | Adds IAM auth credentials for the default application user. If enabled, the application service account username is stored in Secret Manager. | <pre>object({<br/>    enabled = bool<br/>  })</pre> | <pre>{<br/>  "enabled": true<br/>}</pre> | no |
 | <a name="input_instance_edition"></a> [instance\_edition](#input\_instance\_edition) | Override the default instance edition (`ENTERPRISE` or `ENTERPRISE_PLUS`). | `string` | `"ENTERPRISE"` | no |
 | <a name="input_machine_size_override"></a> [machine\_size\_override](#input\_machine\_size\_override) | By default, machine\_size will be the same as the master. Set this variable to override. Keep in mind that replica must have equal or higher machine\_size. See README.md for examples. | `map(any)` | `null` | no |
 | <a name="input_replica_number"></a> [replica\_number](#input\_replica\_number) | The replica-number of the instance in the case of many. Starts at 1, ends at 999. Will be padded with leading zeros. Used as suffix for the instance-name | `number` | `1` | no |
+| <a name="input_secret_key_prefix"></a> [secret\_key\_prefix](#input\_secret\_key\_prefix) | Key prefix for replica secrets. Ex. {secret\_key\_prefix: REPLICA\_PG} creates REPLICA\_PGINSTANCES and REPLICA\_PGIAMUSER. | `string` | `"PG_REPLICA"` | no |
 
 ## Outputs
 
