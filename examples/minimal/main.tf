@@ -11,9 +11,12 @@ module "init" {
 
 # ci: x-release-please-start-version
 module "postgresql" {
-  source           = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.4"
-  database_version = "POSTGRES_18"
-  init             = module.init
-  databases        = ["my-database"]
+  source            = "github.com/entur/terraform-google-sql-db//modules/postgresql?ref=v1.7.4"
+  database_version  = "POSTGRES_18"
+  init              = module.init
+  databases         = ["my-database"]
+  enable_basic_auth = true
+  enable_iam_auth   = true
+  enable_pgaudit    = true
 }
 # ci: x-release-please-end

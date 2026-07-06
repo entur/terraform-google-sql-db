@@ -3,24 +3,24 @@ output "init" {
   value       = var.init
 }
 
-output "user" {
+output "basic_auth_user" {
   description = "Map containing the username and password of the default application user."
   sensitive   = true
-  value = {
-    username = google_sql_user.main.name
-    password = random_password.password.result
-  }
+  value = var.enable_basic_auth ? {
+    username = google_sql_user.main[0].name
+    password = random_password.password[0].result
+  } : {}
 }
 
-output "additional_users" {
+output "additional_basic_auth_users" {
   description = "Map containing the username and password for any additional users."
   sensitive   = true
-  value = {
+  value = var.enable_basic_auth ? {
     for key in keys(local.additional_users) : key => {
       username = google_sql_user.additional_users[key].name
       password = random_password.additional_users_password[key].result
     }
-  }
+  } : {}
 }
 
 output "instance" {
