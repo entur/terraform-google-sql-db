@@ -15,6 +15,9 @@ module "postgresql" {
   init              = module.init
   availability_type = "REGIONAL"
   databases         = ["my-database"]
+  enable_basic_auth = true
+  enable_iam_auth   = true
+  enable_pgaudit    = true
 }
 # ci: x-release-please-end
 
