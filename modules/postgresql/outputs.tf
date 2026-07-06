@@ -12,7 +12,7 @@ output "basic_auth_user" {
   } : {}
 }
 
-output "additional_users" {
+output "additional_basic_auth_users" {
   description = "Map containing the username and password for any additional users."
   sensitive   = true
   value = var.enable_basic_auth ? {
