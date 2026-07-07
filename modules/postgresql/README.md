@@ -6,14 +6,14 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >=1.3 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >=5 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >=7.18 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.6.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | >=5 |
+| <a name="provider_google"></a> [google](#provider\_google) | >=7.18 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.6.2 |
 
 ## Modules
@@ -31,7 +31,10 @@ No modules.
 | [google_sql_database.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database) | resource |
 | [google_sql_database_instance.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance) | resource |
 | [google_sql_user.additional_users](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
+| [google_sql_user.group_iam_auth](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
 | [google_sql_user.main](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
+| [google_sql_user.sa_iam_auth](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
+| [google_sql_user.user_iam_auth](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_user) | resource |
 | [random_integer.additional_users_password_length](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [random_integer.password_length](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [random_password.additional_users_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
@@ -43,7 +46,9 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | The PostgreSQL version (see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version-1). | `string` | n/a | yes |
 | <a name="input_databases"></a> [databases](#input\_databases) | Names of databases to create. | `list(string)` | n/a | yes |
-| <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br/>    app = object({<br/>      id         = string<br/>      name       = string<br/>      owner      = string<br/>      project_id = string<br/>    })<br/>    networks = object({<br/>      project_id = string<br/>      vpc_id     = string<br/>    })<br/>    environment   = string<br/>    labels        = map(string)<br/>    is_production = bool<br/>  })</pre> | n/a | yes |
+| <a name="input_enable_basic_auth"></a> [enable\_basic\_auth](#input\_enable\_basic\_auth) | Enables basic auth for the instance. If enabled, a user will be created and the credentials will be stored in Secret Manager. | `bool` | n/a | yes |
+| <a name="input_enable_iam_auth"></a> [enable\_iam\_auth](#input\_enable\_iam\_auth) | Enables IAM auth for the instance. If enabled, a user will be created and the credentials will be stored in Secret Manager. | `bool` | n/a | yes |
+| <a name="input_init"></a> [init](#input\_init) | Entur init module output. https://github.com/entur/terraform-google-init. Used to determine application name, application project, labels, and resource names. | <pre>object({<br/>    app = object({<br/>      id         = string<br/>      name       = string<br/>      owner      = string<br/>      project_id = string<br/>    })<br/>    networks = object({<br/>      project_id = string<br/>      vpc_id     = string<br/>    })<br/>    environment   = string<br/>    labels        = map(string)<br/>    is_production = bool<br/>    service_accounts = object({<br/>      default = object({<br/>        email = string<br/>        id    = string<br/>      })<br/>    })<br/>  })</pre> | n/a | yes |
 | <a name="input_add_additional_secret_manager_credentials"></a> [add\_additional\_secret\_manager\_credentials](#input\_add\_additional\_secret\_manager\_credentials) | Set to false to not store additional database credentials in secret manager | `bool` | `true` | no |
 | <a name="input_add_main_secret_manager_credentials"></a> [add\_main\_secret\_manager\_credentials](#input\_add\_main\_secret\_manager\_credentials) | Set to false to not store main database credentials in secret manager | `bool` | `true` | no |
 | <a name="input_additional_users"></a> [additional\_users](#input\_additional\_users) | A list of user-names in addition to the main user that should be created. | <pre>map(object({<br/>    username = string<br/>  }))</pre> | `{}` | no |
@@ -57,8 +62,13 @@ No modules.
 | <a name="input_disk_autoresize_limit"></a> [disk\_autoresize\_limit](#input\_disk\_autoresize\_limit) | The maximum size an auto-resized disk can reach. Default is 500 for production, 50 for non-production. | `number` | `null` | no |
 | <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | The storage disk size of the instance. Default is 10 (GB). Only takes effect if disk\_autoresize is set to 'false'. | `number` | `10` | no |
 | <a name="input_enable_backup"></a> [enable\_backup](#input\_enable\_backup) | Whether to enable daily backup of databases. | `bool` | `true` | no |
+| <a name="input_enable_pgaudit"></a> [enable\_pgaudit](#input\_enable\_pgaudit) | Enables pgaudit for the Cloud SQL instance. The pgaudit extension must also be enabled in the database. Warning: changing this value will restart the database instance. | `bool` | `false` | no |
 | <a name="input_enable_private_network"></a> [enable\_private\_network](#input\_enable\_private\_network) | Whether to enable private network connectivity for the Cloud SQL instance. Immutable after it has been enabled. | `bool` | `false` | no |
 | <a name="input_generation"></a> [generation](#input\_generation) | The generation (aka serial no.) of the instance. Starts at 1, ends at 999. Will be padded with leading zeros. | `number` | `1` | no |
+| <a name="input_iam_auth_additional_service_account_users"></a> [iam\_auth\_additional\_service\_account\_users](#input\_iam\_auth\_additional\_service\_account\_users) | Adds IAM auth for service account users. The email is the full service account email, and the default role is 'cloudsqlsuperuser'. If empty, no additional service account users will be added. | <pre>map(object({<br/>    email = string<br/>    roles = optional(list(string), ["cloudsqlsuperuser"])<br/>  }))</pre> | `{}` | no |
+| <a name="input_iam_auth_default_application_user"></a> [iam\_auth\_default\_application\_user](#input\_iam\_auth\_default\_application\_user) | Adds IAM auth for the default application user. If enabled, the application service account will be added to the instance, and granted the 'cloudsqlsuperuser' role. | <pre>object({<br/>    enabled = bool<br/>    roles   = optional(list(string), ["cloudsqlsuperuser"])<br/>  })</pre> | <pre>{<br/>  "enabled": true<br/>}</pre> | no |
+| <a name="input_iam_auth_groups"></a> [iam\_auth\_groups](#input\_iam\_auth\_groups) | Adds additional IAM auth groups. If empty, no additional IAM auth groups will be added. | <pre>map(object({<br/>    email = string<br/>    roles = optional(list(string), ["cloudsqlsuperuser"])<br/>  }))</pre> | `{}` | no |
+| <a name="input_iam_auth_users"></a> [iam\_auth\_users](#input\_iam\_auth\_users) | Adds additional IAM auth users. The email is the full user email, and the default role is 'cloudsqlsuperuser'. If empty, no additional IAM auth users will be added. | <pre>map(object({<br/>    email = string<br/>    roles = optional(list(string), ["cloudsqlsuperuser"])<br/>  }))</pre> | `{}` | no |
 | <a name="input_instance_edition"></a> [instance\_edition](#input\_instance\_edition) | Override the default instance edition (`ENTERPRISE` or `ENTERPRISE_PLUS`). | `string` | `"ENTERPRISE"` | no |
 | <a name="input_machine_size"></a> [machine\_size](#input\_machine\_size) | Map of the database instance CPU count (cpu) and memory sizes in MB (memory). Optionally, set a tier override (tier). See README.md for examples. | <pre>object({<br/>    tier   = optional(string)<br/>    cpu    = optional(number)<br/>    memory = optional(number)<br/>  })</pre> | `null` | no |
 | <a name="input_maintenance_window"></a> [maintenance\_window](#input\_maintenance\_window) | The day of the week (1-7), and hour of the day (0-24) in UTC to perform database instance maintenance. This is the start time of the one hour maintinance window. | <pre>object({<br/>    day  = number<br/>    hour = number<br/>  })</pre> | <pre>{<br/>  "day": 2,<br/>  "hour": 0<br/>}</pre> | no |
@@ -76,9 +86,9 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_additional_users"></a> [additional\_users](#output\_additional\_users) | Map containing the username and password for any additional users. |
+| <a name="output_additional_basic_auth_users"></a> [additional\_basic\_auth\_users](#output\_additional\_basic\_auth\_users) | Map containing the username and password for any additional users. |
+| <a name="output_basic_auth_user"></a> [basic\_auth\_user](#output\_basic\_auth\_user) | Map containing the username and password of the default application user. |
 | <a name="output_databases"></a> [databases](#output\_databases) | Databases created on this instance. |
 | <a name="output_init"></a> [init](#output\_init) | The output of the consumed init module. |
 | <a name="output_instance"></a> [instance](#output\_instance) | The database instance output, as described in https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance. |
-| <a name="output_user"></a> [user](#output\_user) | Map containing the username and password of the default application user. |
 <!-- END_TF_DOCS -->
