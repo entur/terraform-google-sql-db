@@ -142,6 +142,23 @@ they need to do before applying:
 
 > **Before applying, check the following:**
 >
+> - **Keep the Kubernetes provider during the upgrade**: Terraform must destroy the old
+>   Kubernetes resources as part of the upgrade, but v2 of the module no longer declares the
+>   Kubernetes provider. Without it in the root module, `terraform plan` will error. Add the
+>   provider to the root module's `required_providers` (or `provider` block) before running
+>   plan, and remove it again after the apply succeeds.
+>
+>   ```hcl
+>   terraform {
+>     required_providers {
+>       kubernetes = {
+>         source  = "hashicorp/kubernetes"
+>         version = "~> 2.0"
+>       }
+>     }
+>   }
+>   ```
+>
 > - **Kubernetes ConfigMap / Secrets**: The Kubernetes ConfigMap and Secrets previously created
 >   by the module will be destroyed. If anything still reads them, migrate to the common Helm
 >   chart v2 (see step 4) or read from Secret Manager directly.
