@@ -95,6 +95,12 @@ instance ready to accept IAM users and groups.
 When a team is ready to grant the application service account database access, they can remove
 the override (or set `enabled = true`) to add it.
 
+> **Note:** Any new IAM user added via `iam_auth_default_application_user`,
+> `iam_auth_additional_service_account_users`, `iam_auth_users`, or `iam_auth_groups` can connect
+> to the instance, but will not have access to existing schemas, tables, sequences, or other
+> objects in the database. A database administrator must run `GRANT` statements for each new user
+> before the application can read or write data.
+
 **d. Ensure `database_version` is explicit**
 
 If `database_version` is not set, add it. v1 defaulted to `"POSTGRES_14"`. Ask the user which
