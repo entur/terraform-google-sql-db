@@ -33,7 +33,7 @@ jobs:
           - modules/postgresql
           - modules/postgresql-replica
     steps:
-      - uses: actions/checkout@1cce3390c2bfda521930d01229c073c7ff920824 # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6.0.2
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
