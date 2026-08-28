@@ -141,6 +141,15 @@ additional_users = {
 }
 ```
 
+**g. Warn about machine size changes in dev/tst**
+
+Check whether `machine_size` is set. If it is not set on a `dev` or `tst` instance, the module is
+currently using the v1 default of `db-f1-micro`. v2 changes that default to `db-custom-1-3840`.
+Warn the user that changing an instance's machine type causes Cloud SQL to **restart the
+instance**, so applying this upgrade will cause brief downtime on that instance. This applies
+whether they accept the new default or pin `machine_size` to a different tier - any machine size
+change triggers a restart.
+
 ### 3. Warn about removed resources
 
 After making the code changes, tell the user what Terraform will destroy on next apply and what
@@ -173,6 +182,11 @@ they need to do before applying:
 >   Manager. The common Helm chart v2 provides these as environment variables automatically
 >   (`localhost` and `5432`). If the application reads `PGHOST` or `PGPORT` from Secret Manager
 >   directly (outside of the Helm chart), update it to use hardcoded values instead.
+>
+> - **Machine size restart (dev/tst)**: If `machine_size` was not set on a `dev` or `tst`
+>   instance, it will move from the old default (`db-f1-micro`) to the new one
+>   (`db-custom-1-3840`). Cloud SQL restarts the instance to apply any machine type change, so
+>   expect brief downtime on `terraform apply`.
 >
 > Run `terraform plan` to see the full list of resources that will be created, moved, or
 > destroyed. The `google_sql_user.main` and `random_password.password` resources will appear
