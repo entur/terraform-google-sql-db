@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/entur/terraform-google-sql-db/compare/v1.10.2...v2.0.0) (2026-09-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove kubernetes integration, and remove default postgresql version ([#127](https://github.com/entur/terraform-google-sql-db/issues/127))
+
+### Features
+
+* remove kubernetes integration, and remove default postgresql version ([#127](https://github.com/entur/terraform-google-sql-db/issues/127)) ([07d09f9](https://github.com/entur/terraform-google-sql-db/commit/07d09f913f8be61e051c1838a741d02004a33925))
+
 ## [1.10.2](https://github.com/entur/terraform-google-sql-db/compare/v1.10.1...v1.10.2) (2026-04-15)
 
 
