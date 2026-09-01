@@ -5,7 +5,7 @@
 
 ### ⚠ BREAKING CHANGES
 
-* remove kubernetes integration, and remove default postgresql version ([#127](https://github.com/entur/terraform-google-sql-db/issues/127))
+* remove kubernetes integration, and remove default postgresql version ([#127](https://github.com/entur/terraform-google-sql-db/issues/127)). Remove kubernetes integration, and remove default postgresql version. See the [upgrade guide](https://github.com/entur/terraform-google-sql-db/blob/main/UPGRADE.md) for migration steps
 
 ### Features
 
