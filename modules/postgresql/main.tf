@@ -2,21 +2,51 @@ locals {
   # If updated, reflect changes in README.md
   default_tiers = {
     prod     = "db-custom-1-3840"
-    non-prod = "db-f1-micro"
+    non-prod = "db-custom-1-3840"
   }
 
   user_name                      = var.user_name != null ? var.user_name : var.init.app.id
   retained_backups               = var.retained_backups != null ? var.retained_backups : var.init.is_production ? 30 : 7
   deletion_protection            = var.deletion_protection != null ? var.deletion_protection : var.init.is_production ? true : false
   availability_type              = var.availability_type != null ? var.availability_type : var.init.is_production ? "REGIONAL" : "ZONAL"
-  machine_size                   = var.machine_size != null ? try(var.machine_size.tier, "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}") : var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
+  default_machine_size           = var.init.is_production ? local.default_tiers.prod : local.default_tiers.non-prod
+  machine_size                   = var.machine_size != null ? var.machine_size.tier != null ? var.machine_size.tier : "db-custom-${var.machine_size.cpu}-${var.machine_size.memory}" : local.default_machine_size
   offsite_backup_label           = var.disable_offsite_backup == true && var.init.is_production ? { offsite_enabled = false } : {} # Add the label for opt-out of offsite backup in prod environments when disable_offsite_backup is true
   labels                         = merge(var.init.labels, local.offsite_backup_label)
   generation                     = format("%03d", var.generation)
   disk_autoresize_limit          = var.disk_autoresize_limit != null ? var.disk_autoresize_limit : var.init.is_production ? 500 : 50
-  additional_users               = { for key, value in var.additional_users : key => value if value.username != local.user_name }
-  additional_user_credentials    = !var.create_kubernetes_resources ? {} : { for key, value in local.additional_users : key => value if value.create_kubernetes_secret }
+  additional_users               = var.enable_basic_auth ? { for key, value in var.additional_users : key => value if value.username != local.user_name } : {}
   additional_sm_user_credentials = !var.add_additional_secret_manager_credentials ? {} : { for key, value in local.additional_users : key => value if var.add_additional_secret_manager_credentials }
+
+  iam_auth_database_flag = var.enable_iam_auth ? {
+    "enable_iam_auth" = {
+      name  = "cloudsql.iam_authentication",
+      value = "on"
+    }
+  } : {}
+  pgaudit_database_flag = var.enable_pgaudit ? {
+    pgaudit = {
+      name  = "cloudsql.enable_pgaudit"
+      value = "on"
+    }
+  } : {}
+
+  database_flags = merge(var.database_flags, local.iam_auth_database_flag, local.pgaudit_database_flag)
+
+  iam_auth_default_application_user = var.enable_iam_auth && var.iam_auth_default_application_user.enabled ? {
+    "main" = {
+      name  = trimsuffix(var.init.service_accounts.default.email, ".gserviceaccount.com"),
+      roles = var.iam_auth_default_application_user.roles
+  } } : {}
+  iam_auth_additional_service_account_users = var.enable_iam_auth ? {
+    for key, value in var.iam_auth_additional_service_account_users : key => {
+      name  = trimsuffix(value.email, ".gserviceaccount.com"),
+      roles = value.roles
+    }
+  } : {}
+
+  iam_auth_users  = { for key, value in var.iam_auth_users : key => value if var.enable_iam_auth }
+  iam_auth_groups = { for key, value in var.iam_auth_groups : key => value if var.enable_iam_auth }
 }
 
 # See versions at https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/sql_database_instance#database_version
@@ -69,7 +99,7 @@ resource "google_sql_database_instance" "main" {
       record_application_tags = var.query_insights_config.record_application_tags
     }
     dynamic "database_flags" {
-      for_each = var.database_flags
+      for_each = local.database_flags
       content {
         name  = database_flags.value.name
         value = database_flags.value.value
@@ -102,53 +132,32 @@ resource "google_sql_database" "main" {
 }
 
 resource "google_sql_user" "main" {
+  count    = var.enable_basic_auth ? 1 : 0
   name     = local.user_name
   project  = var.init.app.project_id
   instance = google_sql_database_instance.main.name
-  password = random_password.password.result
+  password = random_password.password[0].result
 }
 
-resource "kubernetes_config_map" "main_psql_connection" {
-  count = var.create_kubernetes_resources ? 1 : 0
-  depends_on = [
-    google_sql_database_instance.main
-  ]
-  metadata {
-    name      = "${var.init.app.name}-psql-connection"
-    namespace = var.init.app.name
-    labels    = var.init.labels
-  }
-
-  data = {
-    INSTANCES = "${google_sql_database_instance.main.connection_name}=tcp:5432"
-  }
+moved {
+  from = google_sql_user.main
+  to   = google_sql_user.main[0]
 }
+
 resource "random_integer" "password_length" {
   min = 32
   max = 64
 }
 resource "random_password" "password" {
+  count            = var.enable_basic_auth ? 1 : 0
   length           = random_integer.password_length.result
   special          = true
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
-resource "kubernetes_secret" "main_database_credentials" {
-  count = var.create_kubernetes_resources ? 1 : 0
-  depends_on = [
-    google_sql_database_instance.main
-  ]
-  metadata {
-    name      = "${var.init.app.name}-psql-credentials"
-    namespace = var.init.app.name
-    labels    = var.init.labels
-  }
-  data = {
-    PGHOST     = "localhost"
-    PGPORT     = 5432
-    PGUSER     = google_sql_user.main.name
-    PGPASSWORD = random_password.password.result
-  }
+moved {
+  from = random_password.password
+  to   = random_password.password[0]
 }
 
 resource "google_sql_user" "additional_users" {
@@ -172,32 +181,17 @@ resource "random_password" "additional_users_password" {
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
-resource "kubernetes_secret" "additional_database_credentials" {
-  for_each = local.additional_user_credentials
-  depends_on = [
-    google_sql_database_instance.main
-  ]
-  metadata {
-    name      = "${var.init.app.name}-${each.value.username}-psql-credentials"
-    namespace = var.init.app.name
-    labels    = var.init.labels
-  }
-  data = {
-    PGHOST     = "localhost"
-    PGPORT     = 5432
-    PGUSER     = google_sql_user.additional_users[each.key].name
-    PGPASSWORD = random_password.additional_users_password[each.key].result
-  }
-}
-
 locals {
-  credentials = {
-    HOST      = "localhost",
-    PORT      = 5432,
-    USER      = google_sql_user.main.name,
-    PASSWORD  = random_password.password.result,
-    INSTANCES = google_sql_database_instance.main.connection_name
-  }
+  credentials = merge(
+    var.enable_basic_auth ? {
+      USER     = google_sql_user.main[0].name,
+      PASSWORD = random_password.password[0].result,
+    } : {},
+    length(local.iam_auth_default_application_user) > 0 ? {
+      IAMUSER = local.iam_auth_default_application_user.main.name,
+    } : {},
+    { INSTANCES = google_sql_database_instance.main.connection_name }
+  )
 
 }
 
@@ -234,7 +228,7 @@ locals {
         cred_key         = cred_key
         cred_data        = cred
       }
-    ]
+    ] if var.enable_basic_auth
   ])
 }
 
@@ -274,4 +268,33 @@ resource "google_secret_manager_secret_version" "db_secret_version_additional_da
     google_secret_manager_secret.db_secret_additional,
     random_password.additional_users_password
   ]
+}
+
+### IAM Auth ###
+resource "google_sql_user" "sa_iam_auth" {
+  for_each       = merge(local.iam_auth_default_application_user, local.iam_auth_additional_service_account_users)
+  name           = each.value.name
+  instance       = google_sql_database_instance.main.name
+  type           = "CLOUD_IAM_SERVICE_ACCOUNT"
+  project        = var.init.app.project_id
+  database_roles = each.value.roles
+}
+
+
+resource "google_sql_user" "user_iam_auth" {
+  for_each       = local.iam_auth_users
+  name           = each.value.email
+  instance       = google_sql_database_instance.main.name
+  type           = "CLOUD_IAM_USER"
+  project        = var.init.app.project_id
+  database_roles = each.value.roles
+}
+
+resource "google_sql_user" "group_iam_auth" {
+  for_each       = local.iam_auth_groups
+  name           = each.value.email
+  instance       = google_sql_database_instance.main.name
+  type           = "CLOUD_IAM_GROUP"
+  project        = var.init.app.project_id
+  database_roles = each.value.roles
 }

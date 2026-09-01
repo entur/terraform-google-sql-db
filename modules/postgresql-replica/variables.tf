@@ -77,3 +77,9 @@ variable "instance_edition" {
   default     = "ENTERPRISE"
   description = "Override the default instance edition (`ENTERPRISE` or `ENTERPRISE_PLUS`)."
 }
+
+variable "enable_iam_auth" {
+  description = "Enables IAM database authentication for the replica instance. IAM users and groups must be managed on the primary instance."
+  type        = bool
+  default     = false
+}
