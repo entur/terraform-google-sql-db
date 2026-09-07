@@ -24,7 +24,7 @@ jobs:
     environment: dev
     steps:
       - uses: actions/checkout@1cce3390c2bfda521930d01229c073c7ff920824 # v6.0.2
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v7
         with:
           go-version-file: "test/integration/go.mod"
       - uses: hashicorp/setup-terraform@v4
