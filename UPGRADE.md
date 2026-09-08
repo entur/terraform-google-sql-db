@@ -12,12 +12,12 @@ support for IAM authentication.
 - Terraform `>=1.3`
 - `google` provider `>=7.18`
 - Temporary access to a `kubernetes` provider in your root module (needed only during the upgrade,
-  see [step 6](#6-temporarily-keep-the-kubernetes-provider))
-- The application upgraded to the [common Helm chart](https://github.com/entur/helm-charts) v2, or
-  ready to be upgraded in the same change. v2 of this module stops creating the Kubernetes
-  ConfigMap and Secret that Helm chart v1 reads credentials from - see
+  see [step 9](#9-temporarily-keep-the-kubernetes-provider))
+- The application upgraded to the [common Helm chart](https://github.com/entur/helm-charts) v2
+  **before** upgrading this module. v2 of this module stops creating the Kubernetes ConfigMap and
+  Secret that Helm chart v1 reads credentials from - see
   [entur/helm-charts UPGRADE.md](https://github.com/entur/helm-charts/blob/main/UPGRADE.md) and
-  [step 10](#10-upgrade-the-helm-chart-alongside)
+  [step 2](#2-upgrade-the-helm-chart-first)
 
 ## Breaking changes
 
@@ -73,18 +73,38 @@ team access using `iam_auth_groups`.
 
 ## Step-by-step upgrade instructions
 
-### 1. Find your module blocks
+### 1. Update anything that reads `PGHOST`/`PGPORT` from Secret Manager
+
+The module no longer writes host or port to Secret Manager. The common Helm chart v2 provides
+these as environment variables automatically (`localhost` and `5432`). If any application reads
+`PGHOST` or `PGPORT` from Secret Manager directly, outside of the Helm chart, update it to use
+hardcoded values instead - or migrate it to the common Helm chart v2 (see next step) - before
+proceeding with the module upgrade.
+
+### 2. Upgrade the Helm chart first
+
+The [common Helm chart v2](https://github.com/entur/helm-charts) is designed to work with this
+module version - it reads credentials directly from Secret Manager via External Secrets, so no
+Terraform-created Kubernetes secrets are needed. Upgrade the Helm chart **before** upgrading this
+Terraform module, following its upgrade guide:
+[entur/helm-charts UPGRADE.md](https://github.com/entur/helm-charts/blob/main/UPGRADE.md).
+
+Upgrading the Helm chart first means the application already gets `PGHOST`/`PGPORT` from the
+chart's environment variables before the Terraform module stops writing those secrets, avoiding a
+window where the application is missing connection details.
+
+### 3. Find your module blocks
 
 ```bash
 grep -rl 'terraform-google-sql-db//modules/postgresql' .
 ```
 
-### 2. Update the source ref
+### 4. Update the source ref
 
 Change `?ref=v1.x.x` to the latest v2 release. See the
 [releases page](https://github.com/entur/terraform-google-sql-db/releases) for the current tag.
 
-### 3. Add `enable_basic_auth`
+### 5. Add `enable_basic_auth`
 
 Add this to preserve v1 behaviour, which always created a basic auth user:
 
@@ -95,7 +115,7 @@ enable_basic_auth = true
 Set it to `false` only if you want to drop basic auth in favour of IAM auth. Doing so destroys the
 existing SQL user, its password, and the corresponding Secret Manager secrets.
 
-### 4. Add `enable_iam_auth`
+### 6. Add `enable_iam_auth`
 
 ```hcl
 enable_iam_auth = true
@@ -113,7 +133,7 @@ automatically - add it deliberately once you're ready (see below).
 > to the instance, but has no access to existing schemas, tables, or sequences until a database
 > administrator runs `GRANT` statements for that user.
 
-### 5. Set `database_version` explicitly
+### 7. Set `database_version` explicitly
 
 v1 defaulted to `"POSTGRES_14"`. Confirm this matches your running instance, or check with
 `gcloud sql instances describe <instance>` if unsure:
@@ -122,7 +142,7 @@ v1 defaulted to `"POSTGRES_14"`. Confirm this matches your running instance, or 
 database_version = "POSTGRES_14"
 ```
 
-### 6. Remove Kubernetes-only arguments
+### 8. Remove Kubernetes-only arguments
 
 - Remove `create_kubernetes_resources` if present.
 - Remove `create_kubernetes_secret` from every entry in `additional_users` - only `username` is
@@ -145,7 +165,7 @@ additional_users = {
 }
 ```
 
-### 7. Temporarily keep the kubernetes provider
+### 9. Temporarily keep the kubernetes provider
 
 Terraform must destroy the old Kubernetes resources as part of the upgrade, but v2 of the module no
 longer declares the `kubernetes` provider itself. Without it in your root module, `terraform plan`
@@ -162,14 +182,7 @@ terraform {
 }
 ```
 
-### 8. Update anything that reads `PGHOST`/`PGPORT` from Secret Manager
-
-The module no longer writes host or port to Secret Manager. The common Helm chart v2 provides
-these as environment variables automatically (`localhost` and `5432`). If any application reads
-`PGHOST` or `PGPORT` from Secret Manager directly, outside of the Helm chart, update it to use
-hardcoded values instead.
-
-### 9. Plan and review
+### 10. Plan and review
 
 ```bash
 terraform plan
@@ -179,20 +192,16 @@ Check that `google_sql_user.main` and `random_password.password` show up as **mo
 destroyed/recreated, and confirm the list of resources that will be destroyed matches the
 [list above](#resources-removed-on-upgrade).
 
-### 10. Upgrade the Helm chart alongside
-
-The [common Helm chart v2](https://github.com/entur/helm-charts) is designed to work with this
-module version - it reads credentials directly from Secret Manager via External Secrets, so no
-Terraform-created Kubernetes secrets are needed. Follow its upgrade guide:
-[entur/helm-charts UPGRADE.md](https://github.com/entur/helm-charts/blob/main/UPGRADE.md).
-
 ### 11. Apply, then remove the temporary provider
 
-Once `terraform apply` has succeeded, remove the `kubernetes` provider block you added in step 7,
+Once `terraform apply` has succeeded, remove the `kubernetes` provider block you added in step 9,
 unless something else in the root module still needs it.
 
 ## Quick migration checklist
 
+- [ ] Update anything reading `PGHOST`/`PGPORT` from Secret Manager directly
+- [ ] Upgrade the common Helm chart to v2 (see [entur/helm-charts](https://github.com/entur/helm-charts)),
+      **before** upgrading this Terraform module
 - [ ] Update the module `source` ref to the latest v2 tag
 - [ ] Add `enable_basic_auth = true` (or `false` if intentionally dropping basic auth)
 - [ ] Add `enable_iam_auth` and, if not adding the app's service account yet,
@@ -202,9 +211,7 @@ unless something else in the root module still needs it.
 - [ ] Remove `create_kubernetes_secret` from every `additional_users` entry
 - [ ] If `dev`/`tst` relies on the default machine size, plan for a brief instance restart on apply
 - [ ] Add a temporary `kubernetes` provider to the root module
-- [ ] Update anything reading `PGHOST`/`PGPORT` from Secret Manager directly
 - [ ] Run `terraform plan` and confirm the moved/destroyed resources match this guide
-- [ ] Upgrade the common Helm chart to v2 (see [entur/helm-charts](https://github.com/entur/helm-charts))
 - [ ] Run `terraform apply`
 - [ ] Remove the temporary `kubernetes` provider block
 
