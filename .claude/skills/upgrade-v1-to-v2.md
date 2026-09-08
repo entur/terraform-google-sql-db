@@ -47,7 +47,43 @@ The upgrade includes `moved` blocks so these resources are renamed rather than r
 
 ## Steps
 
-### 1. Find module configurations
+### 1. Prerequisite: check for `PGHOST`/`PGPORT` usage
+
+Before changing any Terraform code, search the working directory for anything that reads
+`PGHOST` or `PGPORT` directly from Secret Manager (outside of the Helm chart):
+
+```
+grep -rl 'PGHOST\|PGPORT' .
+```
+
+v2 of the module no longer writes host or port to Secret Manager. The common Helm chart v2
+provides these as environment variables automatically (`localhost` and `5432`). If anything found
+reads `PGHOST` or `PGPORT` from Secret Manager directly, update it to use those hardcoded values
+instead - or migrate it to the common Helm chart v2 (see step 2) - before proceeding with the
+module upgrade.
+
+### 2. Recommend upgrading the common Helm chart v2 first
+
+The [common Helm chart v2](https://github.com/entur/helm-charts) is designed to work with this
+Terraform module version. It reads `{prefix}INSTANCES`, `{prefix}USER`, and `{prefix}PASSWORD`
+directly from Secret Manager via External Secrets - no Terraform-created Kubernetes secrets
+needed. It also generates `{prefix}HOST=localhost` and `{prefix}PORT=5432` as environment
+variables itself, and supports IAM authentication via Cloud SQL Auth Proxy v2 with Workload
+Identity.
+
+Recommend the user upgrade the Helm chart **before** upgrading this Terraform module, following
+the upgrade skill from the `entur/helm-charts` repository:
+
+```
+Read and follow the upgrade skill at:
+https://raw.githubusercontent.com/entur/helm-charts/main/.claude/skills/upgrade-common-chart/SKILL.md
+```
+
+Upgrading the Helm chart first means the application already gets `PGHOST`/`PGPORT` from the
+chart's environment variables before the Terraform module stops writing those secrets, avoiding a
+window where the application is missing connection details.
+
+### 3. Find module configurations
 
 Search the working directory for files that reference this module:
 
@@ -57,7 +93,7 @@ grep -rl 'terraform-google-sql-db//modules/postgresql' .
 
 Read each file found.
 
-### 2. Update each file
+### 4. Update each file
 
 For each Terraform file that references the postgresql module, apply these changes:
 
@@ -150,7 +186,7 @@ instance**, so applying this upgrade will cause brief downtime on that instance.
 whether they accept the new default or pin `machine_size` to a different tier - any machine size
 change triggers a restart.
 
-### 3. Warn about removed resources
+### 5. Warn about removed resources
 
 After making the code changes, tell the user what Terraform will destroy on next apply and what
 they need to do before applying:
@@ -176,12 +212,7 @@ they need to do before applying:
 >
 > - **Kubernetes ConfigMap / Secrets**: The Kubernetes ConfigMap and Secrets previously created
 >   by the module will be destroyed. If anything still reads them, migrate to the common Helm
->   chart v2 (see step 4) or read from Secret Manager directly.
->
-> - **`PGHOST` and `PGPORT` secrets**: The module no longer writes host or port to Secret
->   Manager. The common Helm chart v2 provides these as environment variables automatically
->   (`localhost` and `5432`). If the application reads `PGHOST` or `PGPORT` from Secret Manager
->   directly (outside of the Helm chart), update it to use hardcoded values instead.
+>   chart v2 (see step 2) or read from Secret Manager directly.
 >
 > - **Machine size restart (dev/tst)**: If `machine_size` was not set on a `dev` or `tst`
 >   instance, it will move from the old default (`db-f1-micro`) to the new one
@@ -192,28 +223,12 @@ they need to do before applying:
 > destroyed. The `google_sql_user.main` and `random_password.password` resources will appear
 > as "moved", not recreated - the database user and password are preserved.
 
-### 4. Recommend the common Helm chart v2
-
-The [common Helm chart v2](https://github.com/entur/helm-charts) is designed to work with this
-Terraform module version. It reads `{prefix}INSTANCES`, `{prefix}USER`, and `{prefix}PASSWORD`
-directly from Secret Manager via External Secrets - no Terraform-created Kubernetes secrets
-needed. It also generates `{prefix}HOST=localhost` and `{prefix}PORT=5432` as environment
-variables itself, and supports IAM authentication via Cloud SQL Auth Proxy v2 with Workload
-Identity.
-
-Tell the user to upgrade the Helm chart alongside the Terraform module, and to follow the
-upgrade skill from the `entur/helm-charts` repository:
-
-```
-Read and follow the upgrade skill at:
-https://raw.githubusercontent.com/entur/helm-charts/main/.claude/skills/upgrade-common-chart/SKILL.md
-```
-
-### 5. Summary
+### 6. Summary
 
 After making all changes, report:
 
+- Whether any applications read `PGHOST`/`PGPORT` from Secret Manager directly, and whether they
+  were updated as part of the prerequisite check
 - Which Terraform files were updated and which variables were added or removed
 - Whether Kubernetes resources were in use (and whether the Helm chart v2 was recommended)
-- Whether any applications read `PGHOST`/`PGPORT` from Secret Manager directly (and need updating)
 - The next steps: `terraform plan`, then `helm dependency update` and `helm lint`
